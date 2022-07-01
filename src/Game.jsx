@@ -1,5 +1,6 @@
 import React from 'react';
 import { Board } from './Board';
+import { Player } from './Player';
 
 function calculateWinner(squares) {
   const lines = [
@@ -24,11 +25,17 @@ function calculateWinner(squares) {
 class Game extends React.Component {
   constructor(props) {
     super(props);
+
+    const playerOne = new Player('❌');
+    const playerTwo = new Player('⭕️');
+
     this.state = {
       history: [{ squares: Array(9).fill(null) }],
       stepNumber: 0,
       xIsNext: true,
       bombInProgress: false,
+      playerOne: playerOne,
+      playerTwo: playerTwo,
     };
   }
 
@@ -47,7 +54,7 @@ class Game extends React.Component {
     }
 
     if (!bomb) {
-      squares[i] = this.state.xIsNext ? '❌' : '⭕️';
+      squares[i] = this.state.xIsNext ? this.state.playerOne.getEmoji() : this.state.playerTwo.getEmoji();
       this.setState({
         history: history.concat([{ squares }]),
         xIsNext: !this.state.xIsNext,
@@ -92,7 +99,7 @@ class Game extends React.Component {
       if (winner) {
         status = `${winner} wins!`;
       } else {
-        status = `Player ${this.state.xIsNext ? '❌' : '⭕️'}'s turn...`;
+        status = `Player ${this.state.xIsNext ? this.state.playerOne.getEmoji() : this.state.playerTwo.getEmoji()}'s turn...`;
       }
     }
     return (
