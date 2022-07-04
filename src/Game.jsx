@@ -4,22 +4,24 @@ import Board from './Board';
 import Player from './Player';
 
 function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-  for (let i = 0; i < lines.length; i += 1) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
-  }
+  // const lines = [
+  //   [0, 1, 2],
+  //   [3, 4, 5],
+  //   [6, 7, 8],
+  //   [0, 3, 6],
+  //   [1, 4, 7],
+  //   [2, 5, 8],
+  //   [0, 4, 8],
+  //   [2, 4, 6],
+  // ];
+  // for (let i = 0; i < lines.length; i += 1) {
+  //   const [a, b, c] = lines[i];
+  //   if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+  //     return squares[a];
+  //   }
+  // }
+
+  //TODO: Calculate winner handling
   return null;
 }
 
@@ -27,16 +29,15 @@ function Game(props) {
   const playerOne = new Player('❌');
   const playerTwo = new Player('⭕️');
 
-  const [history, setHistory] = useState([{ squares: Array(9).fill(null) }]);
-  const [stepNumber, setStepNumber] = useState(0);
+  const [board, setBoard] = useState([[null, null, null], [null, null, null], [null, null, null]]);
   const [xIsNext, setXIsNext] = useState(true);
   const [bombInProgress, setBombInProgress] = useState(false);
 
-  const handleClick = i => {
-    // const history = history.slice(0, stepNumber + 1);
-    const current = history[history.length - 1];
-    const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i] || bombInProgress) {
+  const handleClick = (x,y) => {
+    console.log("Handling click at: " + x + "," + y);
+    const current = board.map((x) => x);
+
+    if (calculateWinner(board) || board[x][y] || bombInProgress) {
       return;
     }
 
@@ -47,48 +48,46 @@ function Game(props) {
     }
 
     if (!bomb) {
-      squares[i] = xIsNext ? playerOne.getEmoji() : playerTwo.getEmoji();
-      setHistory(history.concat([{ squares }]));
+      current[x][y] = xIsNext ? playerOne.getEmoji() : playerTwo.getEmoji();
+      setBoard(current);
       setXIsNext(!xIsNext);
-      setStepNumber(history.length);
     } else {
-      squares[i] = '💣';
-      setHistory(history.concat([{ squares }]));
+      current[x][y] = '💣';
+      setBoard(current);
       setXIsNext(!xIsNext);
-      setStepNumber(history.length);
       setBombInProgress(true);
 
       setTimeout(() => {
-        squares[i] = '💥';
-        setHistory(history.concat([{ squares }]));
+        let newSquares = board.map((x) => x);
+        newSquares[x][y] = '💥';
+        setBoard(newSquares);
       }, 400);
 
       setTimeout(() => {
-        const newSquares = Array(9).fill('💥');
-        setHistory(history.concat([{ squares: newSquares }]));
-      }, 700);
+        const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> '💥'));
+        setBoard(newSquares);
+      }, 750);
 
       setTimeout(() => {
-        const newSquares = Array(9).fill(null);
-        setHistory(history.concat([{ squares: newSquares }]));
+        const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> null));
+        setBoard(newSquares);
         setBombInProgress(false);
-      }, 1500);
+      }, 1400);
     }
   }
 
-    const current = history[stepNumber];
     let status;
-
     if (bombInProgress) {
       status = 'BOOM!';
     } else {
-      const winner = calculateWinner(current.squares);
+      const winner = calculateWinner(board);
       if (winner) {
         status = `${winner} wins!`;
       } else {
         status = `Player ${xIsNext ? playerOne.getEmoji() : playerTwo.getEmoji()}'s turn...`;
       }
     }
+
     return (
       <div className="container">
         <header>TIC TAC BOOM</header>
@@ -97,7 +96,7 @@ function Game(props) {
             <div>{status}</div>
           </div>
           <div className="game-board">
-            <Board squares={current.squares} onClick={(i) => handleClick(i)} />
+            <Board squares={board} onClick={(x,y) => handleClick(x,y)} />
           </div>
         </div>
       </div>

@@ -2,11 +2,11 @@ import React from 'react';
 import { Square } from './square';
 
 function Board(props) {
-  const renderSquare = i => {
+  const renderSquare = (x,y) => {
     return (
       <Square
-        value={props.squares[i]}
-        onClick={() => props.onClick(i)}
+        value={props.squares[x][y]}
+        onClick={() => props.onClick(x,y)}
       />
     );
   }
@@ -14,19 +14,19 @@ function Board(props) {
   return (
       <div>
         <div className="board-row">
-          {renderSquare(0)}
-          {renderSquare(1)}
-          {renderSquare(2)}
+          {renderSquare(0,0)}
+          {renderSquare(0,1)}
+          {renderSquare(0,2)}
         </div>
         <div className="board-row">
-          {renderSquare(3)}
-          {renderSquare(4)}
-          {renderSquare(5)}
+          {renderSquare(1,0)}
+          {renderSquare(1,1)}
+          {renderSquare(1,2)}
         </div>
         <div className="board-row">
-          {renderSquare(6)}
-          {renderSquare(7)}
-          {renderSquare(8)}
+          {renderSquare(2,0)}
+          {renderSquare(2,1)}
+          {renderSquare(2,2)}
         </div>
       </div>
   );
