@@ -77,7 +77,7 @@ class Game extends React.Component {
       setTimeout(() => {
         const newSquares = Array(9).fill('💥');
         this.setState({ history: history.concat([{ squares: newSquares }]) });
-      }, 800);
+      }, 700);
 
       setTimeout(() => {
         const newSquares = Array(9).fill(null);
