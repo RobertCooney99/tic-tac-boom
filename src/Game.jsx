@@ -1,6 +1,7 @@
 import React from 'react';
-import { Board } from './Board';
-import { Player } from './Player';
+import { useState } from 'react';
+import Board from './Board';
+import Player from './Player';
 
 function calculateWinner(squares) {
   const lines = [
@@ -22,28 +23,20 @@ function calculateWinner(squares) {
   return null;
 }
 
-class Game extends React.Component {
-  constructor(props) {
-    super(props);
+function Game(props) {
+  const playerOne = new Player('❌');
+  const playerTwo = new Player('⭕️');
 
-    const playerOne = new Player('❌');
-    const playerTwo = new Player('⭕️');
+  const [history, setHistory] = useState([{ squares: Array(9).fill(null) }]);
+  const [stepNumber, setStepNumber] = useState(0);
+  const [xIsNext, setXIsNext] = useState(true);
+  const [bombInProgress, setBombInProgress] = useState(false);
 
-    this.state = {
-      history: [{ squares: Array(9).fill(null) }],
-      stepNumber: 0,
-      xIsNext: true,
-      bombInProgress: false,
-      playerOne: playerOne,
-      playerTwo: playerTwo,
-    };
-  }
-
-  handleClick(i) {
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+  const handleClick = i => {
+    // const history = history.slice(0, stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i] || this.state.bombInProgress) {
+    if (calculateWinner(squares) || squares[i] || bombInProgress) {
       return;
     }
 
@@ -54,52 +47,46 @@ class Game extends React.Component {
     }
 
     if (!bomb) {
-      squares[i] = this.state.xIsNext ? this.state.playerOne.getEmoji() : this.state.playerTwo.getEmoji();
-      this.setState({
-        history: history.concat([{ squares }]),
-        xIsNext: !this.state.xIsNext,
-        stepNumber: history.length,
-      });
+      squares[i] = xIsNext ? playerOne.getEmoji() : playerTwo.getEmoji();
+      setHistory(history.concat([{ squares }]));
+      setXIsNext(!xIsNext);
+      setStepNumber(history.length);
     } else {
       squares[i] = '💣';
-      this.setState({
-        history: history.concat([{ squares }]),
-        xIsNext: !this.state.xIsNext,
-        stepNumber: history.length,
-        bombInProgress: true,
-      });
+      setHistory(history.concat([{ squares }]));
+      setXIsNext(!xIsNext);
+      setStepNumber(history.length);
+      setBombInProgress(true);
 
       setTimeout(() => {
         squares[i] = '💥';
-        this.setState({ history: history.concat([{ squares }]) });
+        setHistory(history.concat([{ squares }]));
       }, 400);
 
       setTimeout(() => {
         const newSquares = Array(9).fill('💥');
-        this.setState({ history: history.concat([{ squares: newSquares }]) });
+        setHistory(history.concat([{ squares: newSquares }]));
       }, 700);
 
       setTimeout(() => {
         const newSquares = Array(9).fill(null);
-        this.setState({ history: history.concat([{ squares: newSquares }]) });
-        this.setState({ bombInProgress: false });
+        setHistory(history.concat([{ squares: newSquares }]));
+        setBombInProgress(false);
       }, 1500);
     }
   }
 
-  render() {
-    const { history } = this.state;
-    const current = history[this.state.stepNumber];
+    const current = history[stepNumber];
     let status;
 
-    if (this.state.bombInProgress) {
+    if (bombInProgress) {
       status = 'BOOM!';
     } else {
       const winner = calculateWinner(current.squares);
       if (winner) {
         status = `${winner} wins!`;
       } else {
-        status = `Player ${this.state.xIsNext ? this.state.playerOne.getEmoji() : this.state.playerTwo.getEmoji()}'s turn...`;
+        status = `Player ${xIsNext ? playerOne.getEmoji() : playerTwo.getEmoji()}'s turn...`;
       }
     }
     return (
@@ -110,12 +97,11 @@ class Game extends React.Component {
             <div>{status}</div>
           </div>
           <div className="game-board">
-            <Board squares={current.squares} onClick={(i) => this.handleClick(i)} />
+            <Board squares={current.squares} onClick={(i) => handleClick(i)} />
           </div>
         </div>
       </div>
     );
-  }
 }
 
-export { Game };
+export default Game;
