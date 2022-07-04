@@ -17,11 +17,22 @@ function Game(props) {
   const [bombInProgress, setBombInProgress] = useState(false);
 
   const plantBomb = (x,y) => {
-    placeBombOnBoard(x,y);
-    explodeBomb(x,y);
-    spreadBombToSurroundingArea(x,y);
-    spreadBombToWholeBoard();
-    clearBoardFromExplosion();
+    Promise.resolve()
+      .then(() => placeBombOnBoard(x,y))
+      .then(() => delay(400))
+      .then(() => explodeBomb(x,y))
+      .then(() => delay(150))
+      .then(() => spreadBombToSurroundingArea(x,y))
+      .then(() => delay(150))
+      .then(() => spreadBombToWholeBoard())
+      .then(() => delay(300))
+      .then(() => clearBoardFromExplosion());
+  }
+
+  function delay(duration) {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(), duration);
+    });
   }
 
   const placeBombOnBoard = (x,y) => {
