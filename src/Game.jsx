@@ -41,7 +41,7 @@ function Game(props) {
   const playerTwo = new Player('⭕️');
 
   const [board, setBoard] = useState([[null, null, null], [null, null, null], [null, null, null]]);
-  const [xIsNext, setXIsNext] = useState(true);
+  const [playerOneIsNext, setPlayerOneIsNext] = useState(true);
   const [bombInProgress, setBombInProgress] = useState(false);
 
   const plantSmallBomb = (x,y) => {
@@ -89,7 +89,7 @@ function Game(props) {
     const current = board.map((x) => x);
     current[x][y] = bomb;
     setBoard(current);
-    setXIsNext(!xIsNext);
+    setPlayerOneIsNext(!playerOneIsNext);
     setBombInProgress(true);
   }
 
@@ -151,9 +151,9 @@ function Game(props) {
 
     if (!bomb) {
       const current = board.map((x) => x);
-      current[x][y] = xIsNext ? playerOne.getEmoji() : playerTwo.getEmoji();
+      current[x][y] = playerOneIsNext ? playerOne.getEmoji() : playerTwo.getEmoji();
       setBoard(current);
-      setXIsNext(!xIsNext);
+      setPlayerOneIsNext(!playerOneIsNext);
     } else {
       const randomNumber = Math.floor(Math.random() * 2);
       if (randomNumber === 1) {
@@ -166,7 +166,7 @@ function Game(props) {
 
   const resetGame = () => {
     setBoard([[null, null, null], [null, null, null], [null, null, null]]);
-    setXIsNext(true);
+    setPlayerOneIsNext(true);
     setBombInProgress(false);
   }
 
@@ -178,7 +178,7 @@ function Game(props) {
       if (winner) {
         status = `${winner} wins!`;
       } else {
-        status = `Player ${xIsNext ? playerOne.getEmoji() : playerTwo.getEmoji()}'s turn...`;
+        status = `Player ${playerOneIsNext ? playerOne.getEmoji() : playerTwo.getEmoji()}'s turn...`;
       }
     }
 
