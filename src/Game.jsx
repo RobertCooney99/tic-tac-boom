@@ -2,9 +2,37 @@ import React from 'react';
 import { useState } from 'react';
 import Board from './Board';
 import Player from './Player';
+import { MdReplay } from 'react-icons/md';
 
 function calculateWinner(squares) {
-  //TODO: Calculate winner handling
+  if (squares[0][0] && squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2]) {
+    return squares[0][0];
+  } else if (squares[2][0] && squares[2][0] === squares[1][1] && squares[2][0] === squares[0][2]) {
+    return squares[2][0];
+  }
+
+  for (let i = 0; i <= 2; i++) {
+    if (squares[i][0] && squares[i][0] === squares[i][1] && squares[i][0] === squares[i][2]) {
+      return squares[i][0];
+    } else if (squares[0][i] && squares[0][i] === squares[1][i] && squares[0][i] === squares[2][i]) {
+      return squares[0][i];
+    }
+  }
+
+  let count = 0;
+
+  for (let i = 0; i <= 2; i++) {
+    for (let j = 0; j <= 2; j++) {
+      if (squares[i][j]) {
+        count++;
+      }
+    }
+  }
+
+  if (count === 9) {
+    return "No one";
+  }
+
   return null;
 }
 
@@ -16,14 +44,25 @@ function Game(props) {
   const [xIsNext, setXIsNext] = useState(true);
   const [bombInProgress, setBombInProgress] = useState(false);
 
-  const plantBomb = (x,y) => {
+  const plantSmallBomb = (x,y) => {
     Promise.resolve()
-      .then(() => placeBombOnBoard(x,y))
+      .then(() => placeBombOnBoard(x,y,'🧨'))
       .then(() => delay(400))
       .then(() => explodeBomb(x,y))
-      .then(() => delay(150))
+      .then(() => delay(300))
       .then(() => spreadBombToSurroundingArea(x,y))
-      .then(() => delay(150))
+      .then(() => delay(300))
+      .then(() => cleanUpBomb(x,y));
+  }
+
+  const plantBigBomb = (x,y) => {
+    Promise.resolve()
+      .then(() => placeBombOnBoard(x,y,'💣'))
+      .then(() => delay(500))
+      .then(() => explodeBomb(x,y))
+      .then(() => delay(300))
+      .then(() => spreadBombToSurroundingArea(x,y))
+      .then(() => delay(300))
       .then(() => spreadBombToWholeBoard())
       .then(() => delay(300))
       .then(() => clearBoardFromExplosion());
@@ -35,49 +74,50 @@ function Game(props) {
     });
   }
 
-  const placeBombOnBoard = (x,y) => {
+  const cleanUpBomb = (x,y) => {
+    const surroundingCoordinates = calculateSurroundingCoordinates(x,y);
+    let newSquares = board.map((x) => x);
+    newSquares[x][y] = null;
+    for (let coordinates of surroundingCoordinates) {
+      newSquares[coordinates[0]][coordinates[1]] = null;
+    }
+    setBoard(newSquares);
+    setBombInProgress(false);
+  }
+
+  const placeBombOnBoard = (x,y,bomb) => {
     const current = board.map((x) => x);
-    current[x][y] = '💣';
+    current[x][y] = bomb;
     setBoard(current);
     setXIsNext(!xIsNext);
     setBombInProgress(true);
   }
 
   const explodeBomb = (x,y) => {
-    setTimeout(() => {
-      let newSquares = board.map((x) => x);
-      newSquares[x][y] = '💥';
-      setBoard(newSquares);
-    }, 600);
+    let newSquares = board.map((x) => x);
+    newSquares[x][y] = '💥';
+    setBoard(newSquares);
   }
 
   const spreadBombToSurroundingArea = (x,y) => {
     const surroundingCoordinates = calculateSurroundingCoordinates(x,y);
-    console.log(surroundingCoordinates);
-    setTimeout(() => {
       const newSquares = board.map((x) => x);
       for (let coordinates of surroundingCoordinates) {
-        console.log(coordinates[0] + ' : ' + coordinates[1]);
         newSquares[coordinates[0]][coordinates[1]] = '💥';
       }
       console.log(newSquares);
       setBoard(newSquares);
-    }, 850);
   }
 
   const spreadBombToWholeBoard = () => {
-    setTimeout(() => {
       const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> '💥'));
       setBoard(newSquares);
-    }, 1050);
   }
 
   const clearBoardFromExplosion = () => {
-    setTimeout(() => {
       const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> null));
       setBoard(newSquares);
       setBombInProgress(false);
-    }, 1350);
   }
 
   const calculateSurroundingCoordinates = (x,y) => {
@@ -115,8 +155,19 @@ function Game(props) {
       setBoard(current);
       setXIsNext(!xIsNext);
     } else {
-      plantBomb(x,y);
+      const randomNumber = Math.floor(Math.random() * 2);
+      if (randomNumber === 1) {
+        plantSmallBomb(x,y);
+      } else {
+        plantBigBomb(x,y);
+      }
     }
+  }
+
+  const resetGame = () => {
+    setBoard([[null, null, null], [null, null, null], [null, null, null]]);
+    setXIsNext(true);
+    setBombInProgress(false);
   }
 
     let status;
@@ -140,6 +191,9 @@ function Game(props) {
           </div>
           <div className="game-board">
             <Board squares={board} onClick={(x,y) => handleClick(x,y)} />
+          </div>
+          <div className="game-controls">
+            <MdReplay size={50} color={"#222"} onClick={() => resetGame()}></MdReplay>
           </div>
         </div>
       </div>
