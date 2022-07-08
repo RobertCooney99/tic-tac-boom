@@ -18,4 +18,9 @@ const serverPortNumber = 3001;
 
 server.listen(serverPortNumber, () => {
     console.log("Server is running on port number: " + serverPortNumber);
-})
+});
+
+io.on("connection", (socket) => {
+    console.log(`User Connected. [SocketID: ${socket.id}]`);
+});
+  
