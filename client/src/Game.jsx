@@ -138,6 +138,7 @@ function Game(props) {
 
   const handleClick = (x,y) => {
     console.log("Handling click at: " + x + "," + y);
+    props.socket.emit('boardClick', {xCoordinate: x, yCoordinate: y});
 
     if (calculateWinner(board) || board[x][y] || bombInProgress) {
       return;

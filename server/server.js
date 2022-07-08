@@ -23,7 +23,11 @@ server.listen(serverPortNumber, () => {
 io.on("connection", (socket) => {
     console.log(`User Connected. [SocketID: ${socket.id}]`);
 
-    socket.on('disconnect', function() {
+    socket.on('disconnect', () => {
         console.log(`User Disconnected. [SocketID: ${socket.id}]`);
-     });
+    });
+
+    socket.on('boardClick', (clickData) => {
+        console.log(`Board Click. [Coordinates: ${clickData.xCoordinate},${clickData.yCoordinate}]`);
+    })
 });
