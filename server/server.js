@@ -22,5 +22,8 @@ server.listen(serverPortNumber, () => {
 
 io.on("connection", (socket) => {
     console.log(`User Connected. [SocketID: ${socket.id}]`);
+
+    socket.on('disconnect', function() {
+        console.log(`User Disconnected. [SocketID: ${socket.id}]`);
+     });
 });
-  
