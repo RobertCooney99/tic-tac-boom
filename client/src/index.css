@@ -73,8 +73,16 @@ ul {
 }
 
 .game-controls {
+    width: 100%;
     display: flex;
     padding-top: 35px;
+    justify-content: space-around;
+    flex-direction: row;
+    align-content: center
+}
+
+.game-control {
+    display: flex;
 }
 
 header {

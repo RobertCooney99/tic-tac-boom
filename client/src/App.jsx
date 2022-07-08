@@ -7,6 +7,7 @@ import Home from './Home';
 function App(props) {
   return (
     <div className="wrapper">
+      <header>TIC TAC BOOM</header>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home/>}/>

@@ -2,7 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 import Board from './Board';
 import Player from './Player';
-import { MdReplay } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { MdHomeFilled, MdReplay } from 'react-icons/md';
 
 function calculateWinner(squares) {
   if (squares[0][0] && squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2]) {
@@ -185,7 +186,6 @@ function Game(props) {
 
     return (
       <div className="container">
-        <header>TIC TAC BOOM</header>
         <div className="game">
           <div className="game-info">
             <div>{status}</div>
@@ -194,8 +194,13 @@ function Game(props) {
             <Board squares={board} onClick={(x,y) => handleClick(x,y)} />
           </div>
           <div className="game-controls">
-            <MdReplay size={50} color={"#222"} onClick={() => resetGame()}></MdReplay>
-          </div>
+            <div className="game-control">
+              <Link to="/"><MdHomeFilled size={50} color={"#222"} onClick={() => resetGame()} /></Link>
+            </div>
+            <div className="game-control">
+              <MdReplay size={50} color={"#222"} onClick={() => resetGame()} /> 
+            </div>
+           </div>
         </div>
       </div>
     );
