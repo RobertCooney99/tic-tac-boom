@@ -7,4 +7,4 @@ import io from "socket.io-client";
 const socket = io.connect("http://localhost:3001");
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<Game />);
+root.render(<Game socket={socket}/>);
