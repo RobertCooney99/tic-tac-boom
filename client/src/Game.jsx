@@ -2,7 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 import Board from './Board';
 import Player from './Player';
-import { MdReplay } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+import { MdHome, MdReplay, MdShare } from 'react-icons/md';
 
 function calculateWinner(squares) {
   if (squares[0][0] && squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2]) {
@@ -61,7 +62,7 @@ function Game(props) {
       .then(() => delay(500))
       .then(() => explodeBomb(x,y))
       .then(() => delay(300))
-      .then(() => spreadBombToSurroundingArea(x,y))
+      .then(() => spreadBigBombToSurroundingArea(x,y))
       .then(() => delay(300))
       .then(() => spreadBombToWholeBoard())
       .then(() => delay(300))
@@ -101,12 +102,22 @@ function Game(props) {
 
   const spreadBombToSurroundingArea = (x,y) => {
     const surroundingCoordinates = calculateSurroundingCoordinates(x,y);
-      const newSquares = board.map((x) => x);
-      for (let coordinates of surroundingCoordinates) {
-        newSquares[coordinates[0]][coordinates[1]] = '💥';
-      }
-      console.log(newSquares);
-      setBoard(newSquares);
+    const newSquares = board.map((x) => x);
+    for (let coordinates of surroundingCoordinates) {
+      newSquares[coordinates[0]][coordinates[1]] = '💥';
+    }
+    console.log(newSquares);
+    setBoard(newSquares);
+  }
+
+  const spreadBigBombToSurroundingArea = (x,y) => {
+    const surroundingCoordinates = calculateSurroundingCoordinates(x,y);
+    const newSquares = board.map((x) => x);
+    for (let coordinates of surroundingCoordinates) {
+      newSquares[coordinates[0]][coordinates[1]] = '💥';
+    }
+    console.log(newSquares);
+    setBoard(newSquares);
   }
 
   const spreadBombToWholeBoard = () => {
@@ -185,7 +196,6 @@ function Game(props) {
 
     return (
       <div className="container">
-        <header>TIC TAC BOOM</header>
         <div className="game">
           <div className="game-info">
             <div>{status}</div>
@@ -194,8 +204,16 @@ function Game(props) {
             <Board squares={board} onClick={(x,y) => handleClick(x,y)} />
           </div>
           <div className="game-controls">
-            <MdReplay size={50} color={"#222"} onClick={() => resetGame()}></MdReplay>
-          </div>
+            <div className="game-control">
+              <Link to="/"><MdHome size={50} color={"#222"} onClick={() => resetGame()} /></Link>
+            </div>
+            <div className="game-control">
+              <MdReplay size={50} color={"#222"} onClick={() => resetGame()} /> 
+            </div>
+            <div className="game-control">
+              <MdShare size={50} color={"#222"} onClick={() => resetGame()} /> 
+            </div>
+           </div>
         </div>
       </div>
     );
