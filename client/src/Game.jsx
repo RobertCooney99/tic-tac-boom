@@ -142,7 +142,7 @@ function Game(props) {
         alreadyExplodedSquares.push([coordinates[0],coordinates[1]]);
       }
       setBoard(newSquares);
-      return Promise.resolve().then(() => delay(250)).then(() => spreadBigBombToSurroundingAreaSmooth(squaresToExplode, alreadyExplodedSquares));
+      return Promise.resolve().then(() => delay(250)).then(() => spreadBigBombToSurroundingArea(squaresToExplode, alreadyExplodedSquares));
     }
   }
 
