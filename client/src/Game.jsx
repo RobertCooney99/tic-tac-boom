@@ -61,11 +61,9 @@ function Game(props) {
       .then(() => placeBombOnBoard(x,y,'💣'))
       .then(() => delay(500))
       .then(() => explodeBomb(x,y))
-      .then(() => delay(300))
-      .then(() => spreadBigBombToSurroundingArea(x,y))
-      .then(() => delay(300))
-      .then(() => spreadBombToWholeBoard())
-      .then(() => delay(300))
+      .then(() => delay(250))
+      .then(() => spreadBigBombToSurroundingArea([[x,y]], [[x,y]]))
+      .then(() => delay(250))
       .then(() => clearBoardFromExplosion());
   }
 
@@ -110,19 +108,68 @@ function Game(props) {
     setBoard(newSquares);
   }
 
-  const spreadBigBombToSurroundingArea = (x,y) => {
-    const surroundingCoordinates = calculateSurroundingCoordinates(x,y);
-    const newSquares = board.map((x) => x);
-    for (let coordinates of surroundingCoordinates) {
-      newSquares[coordinates[0]][coordinates[1]] = '💥';
+  const spreadBigBombToSurroundingArea = (coordinatesToExplode, alreadyExplodedSquares) => {
+    if (alreadyExplodedSquares.length >= 9) {
+      return;
+    } else {
+      let surroundingCoordinates = [];
+      let allSurroundingCoordinates = [];
+      for (let coordinates of coordinatesToExplode) {
+        surroundingCoordinates.push(calculateSurroundingCoordinates(coordinates[0], coordinates[1]));
+      }
+      for (let coordinatesArray of surroundingCoordinates) {
+        for (let coordinates of coordinatesArray) {
+          allSurroundingCoordinates.push(coordinates);
+        }
+      }
+      allSurroundingCoordinates = [...new Set(allSurroundingCoordinates)];
+
+      let squaresToExplode = allSurroundingCoordinates.filter(x => {
+        for (let y of alreadyExplodedSquares) {
+          if (compareArrays(x,y)) {
+            return false;
+          }
+        }
+        return true;
+      });
+
+      squaresToExplode = removeDuplicatesFromArray(squaresToExplode);
+
+      const newSquares = board.map((x) => x);
+      for (let coordinates of squaresToExplode) {
+        newSquares[coordinates[0]][coordinates[1]] = '💥';
+        alreadyExplodedSquares.push([coordinates[0],coordinates[1]]);
+      }
+      setBoard(newSquares);
+      return Promise.resolve().then(() => delay(250)).then(() => spreadBigBombToSurroundingArea(squaresToExplode, alreadyExplodedSquares));
     }
-    console.log(newSquares);
-    setBoard(newSquares);
   }
 
-  const spreadBombToWholeBoard = () => {
-      const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> '💥'));
-      setBoard(newSquares);
+  function removeDuplicatesFromArray(arr) {
+    let deduplicatedArray = [];
+    const arrayLength = arr.length;
+    let valuesFound = {};
+    for(let i = 0; i < arrayLength; i++) {
+        let valueAsString = JSON.stringify(arr[i]);
+        if(valuesFound[valueAsString]) {
+          continue;
+        }
+        valuesFound[valueAsString] = true;
+        deduplicatedArray.push(arr[i]);
+    }
+    return deduplicatedArray;
+  }
+
+  const compareArrays = (a, b) => {
+    if (a.length !== b.length) {
+      return false;
+    }
+    for (let i in a) {
+      if (a[i] !== b[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 
   const clearBoardFromExplosion = () => {
