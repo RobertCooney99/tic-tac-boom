@@ -202,7 +202,7 @@ function Game(props) {
       return;
     }
 
-    const randomNumber = Math.floor(Math.random() * 2);
+    const randomNumber = Math.floor(Math.random() * 5);
     let bomb;
     if (randomNumber === 1) {
       bomb = true;
