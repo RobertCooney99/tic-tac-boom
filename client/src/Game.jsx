@@ -126,14 +126,14 @@ function Game(props) {
 
       let squaresToExplode = allSurroundingCoordinates.filter(x => {
         for (let y of alreadyExplodedSquares) {
-          if (compareArray(x,y)) {
+          if (compareArrays(x,y)) {
             return false;
           }
         }
         return true;
       });
 
-      squaresToExplode = removeDuplicates(squaresToExplode);
+      squaresToExplode = removeDuplicatesFromArray(squaresToExplode);
 
       const newSquares = board.map((x) => x);
       for (let coordinates of squaresToExplode) {
@@ -145,19 +145,22 @@ function Game(props) {
     }
   }
 
-  function removeDuplicates(arr) {
-    var uniques = [];
-    var itemsFound = {};
-    for(var i = 0, l = arr.length; i < l; i++) {
-        var stringified = JSON.stringify(arr[i]);
-        if(itemsFound[stringified]) { continue; }
-        uniques.push(arr[i]);
-        itemsFound[stringified] = true;
+  function removeDuplicatesFromArray(arr) {
+    let deduplicatedArray = [];
+    const arrayLength = arr.length;
+    let valuesFound = {};
+    for(let i = 0; i < arrayLength; i++) {
+        let valueAsString = JSON.stringify(arr[i]);
+        if(valuesFound[valueAsString]) {
+          continue;
+        }
+        valuesFound[valueAsString] = true;
+        deduplicatedArray.push(arr[i]);
     }
-    return uniques;
-}
+    return deduplicatedArray;
+  }
 
-  const compareArray = (a, b) => {
+  const compareArrays = (a, b) => {
     if (a.length !== b.length) {
       return false;
     }
