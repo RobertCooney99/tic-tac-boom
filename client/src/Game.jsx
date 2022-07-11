@@ -138,7 +138,6 @@ function Game(props) {
       const newSquares = board.map((x) => x);
       for (let coordinates of squaresToExplode) {
         newSquares[coordinates[0]][coordinates[1]] = '💥';
-        const currentBoard = [... newSquares];
         alreadyExplodedSquares.push([coordinates[0],coordinates[1]]);
       }
       setBoard(newSquares);
@@ -168,11 +167,6 @@ function Game(props) {
       }
     }
     return true;
-  }
-
-  const spreadBombToWholeBoard = () => {
-      const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> '💥'));
-      setBoard(newSquares);
   }
 
   const clearBoardFromExplosion = () => {
