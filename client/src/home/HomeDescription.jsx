@@ -1,7 +1,7 @@
 import './description.css';
 import Card from './Card';
 
-function Description() {
+function HomeDescription() {
 
 
     return(
@@ -13,4 +13,4 @@ function Description() {
     )
 }
 
-export default Description;
+export default HomeDescription;
