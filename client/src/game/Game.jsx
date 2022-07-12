@@ -5,38 +5,8 @@ import Player from './Player';
 import { Link } from 'react-router-dom';
 import { MdHome, MdReplay, MdShare } from 'react-icons/md';
 import './game.css';
+import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay } from './helper/gameUtils';
 
-function calculateWinner(squares) {
-  if (squares[0][0] && squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2]) {
-    return squares[0][0];
-  } else if (squares[2][0] && squares[2][0] === squares[1][1] && squares[2][0] === squares[0][2]) {
-    return squares[2][0];
-  }
-
-  for (let i = 0; i <= 2; i++) {
-    if (squares[i][0] && squares[i][0] === squares[i][1] && squares[i][0] === squares[i][2]) {
-      return squares[i][0];
-    } else if (squares[0][i] && squares[0][i] === squares[1][i] && squares[0][i] === squares[2][i]) {
-      return squares[0][i];
-    }
-  }
-
-  let count = 0;
-
-  for (let i = 0; i <= 2; i++) {
-    for (let j = 0; j <= 2; j++) {
-      if (squares[i][j]) {
-        count++;
-      }
-    }
-  }
-
-  if (count === 9) {
-    return "No one";
-  }
-
-  return null;
-}
 
 function Game(props) {
   const playerOne = new Player('❌');
@@ -66,12 +36,6 @@ function Game(props) {
       .then(() => spreadBigBombToSurroundingArea([[x,y]], [[x,y]]))
       .then(() => delay(250))
       .then(() => clearBoardFromExplosion());
-  }
-
-  function delay(duration) {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(), duration);
-    });
   }
 
   const cleanUpBomb = (x,y) => {
@@ -146,33 +110,6 @@ function Game(props) {
     }
   }
 
-  function removeDuplicatesFromArray(arr) {
-    let deduplicatedArray = [];
-    const arrayLength = arr.length;
-    let valuesFound = {};
-    for(let i = 0; i < arrayLength; i++) {
-        let valueAsString = JSON.stringify(arr[i]);
-        if(valuesFound[valueAsString]) {
-          continue;
-        }
-        valuesFound[valueAsString] = true;
-        deduplicatedArray.push(arr[i]);
-    }
-    return deduplicatedArray;
-  }
-
-  const compareArrays = (a, b) => {
-    if (a.length !== b.length) {
-      return false;
-    }
-    for (let i in a) {
-      if (a[i] !== b[i]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   const clearBoardFromExplosion = () => {
       const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> null));
       setBoard(newSquares);
@@ -232,41 +169,41 @@ function Game(props) {
     }
   }
 
-    let status;
-    if (bombInProgress) {
-      status = 'BOOM!';
+  let status;
+  if (bombInProgress) {
+    status = 'BOOM!';
+  } else {
+    const winner = calculateWinner(board);
+    if (winner) {
+      status = `${winner} wins!`;
     } else {
-      const winner = calculateWinner(board);
-      if (winner) {
-        status = `${winner} wins!`;
-      } else {
-        status = `Player ${playerOneIsNext ? playerOne.getEmoji() : playerTwo.getEmoji()}'s turn...`;
-      }
+      status = `Player ${playerOneIsNext ? playerOne.getEmoji() : playerTwo.getEmoji()}'s turn...`;
     }
+  }
 
-    return (
-      <div className="container">
-        <div className="game">
-          <div className="game-info">
-            <div>{status}</div>
-          </div>
-          <div className="game-board">
-            <Board squares={board} onClick={(x,y) => handleClick(x,y)} />
-          </div>
-          <div className="game-controls">
-            <div className="game-control">
-              <Link to="/"><MdHome size={50} color={"#222"} onClick={() => resetGame()} /></Link>
-            </div>
-            <div className="game-control">
-              <MdReplay size={50} color={"#222"} onClick={() => resetGame()} /> 
-            </div>
-            <div className="game-control">
-              <MdShare size={50} color={"#222"} onClick={() => resetGame()} /> 
-            </div>
-           </div>
+  return (
+    <div className="container">
+      <div className="game">
+        <div className="game-info">
+          <div>{status}</div>
         </div>
+        <div className="game-board">
+          <Board squares={board} onClick={(x,y) => handleClick(x,y)} />
+        </div>
+        <div className="game-controls">
+          <div className="game-control">
+            <Link to="/"><MdHome size={50} color={"#222"} onClick={() => resetGame()} /></Link>
+          </div>
+          <div className="game-control">
+            <MdReplay size={50} color={"#222"} onClick={() => resetGame()} /> 
+          </div>
+          <div className="game-control">
+            <MdShare size={50} color={"#222"} onClick={() => resetGame()} /> 
+          </div>
+          </div>
       </div>
-    );
+    </div>
+  );
 }
 
 export default Game;
