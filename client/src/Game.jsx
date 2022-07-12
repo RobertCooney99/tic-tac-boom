@@ -177,9 +177,11 @@ function Game(props) {
   }
 
   const resetGame = () => {
-    setBoard([[null, null, null], [null, null, null], [null, null, null]]);
-    setPlayerOneIsNext(true);
-    setBombInProgress(false);
+    if (!bombInProgress) {
+      setBoard([[null, null, null], [null, null, null], [null, null, null]]);
+      setPlayerOneIsNext(true);
+      setBombInProgress(false);
+    }
   }
 
     let status;
