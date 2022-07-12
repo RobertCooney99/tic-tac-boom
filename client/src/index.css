@@ -128,16 +128,3 @@ ul {
 .game-control {
     display: flex;
 }
-
-header {
-    width: 100%;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #222;
-    color: #fff;
-    font-size: 35px;
-    font-weight: 800;
-}

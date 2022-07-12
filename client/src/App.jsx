@@ -3,11 +3,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Game from './Game';
 import Home from './Home';
+import Header from './Header';
 
 function App(props) {
   return (
     <div className="wrapper">
-      <header>TIC TAC BOOM</header>
+      <Header/>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home/>}/>
