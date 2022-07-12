@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Game from './game/Game';
 import Home from './home/Home';
+import Settings from './Settings';
 import Header from './common/Header';
 import './app.css';
 
@@ -16,6 +17,7 @@ function App(props) {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Home/>}/>
+              <Route path="/settings" element={<Settings/>}/>
               <Route path="/game" element={<Game socket={props.socket}/>}/>
             </Routes>
           </BrowserRouter>
