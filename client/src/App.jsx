@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Game from './Game';
-import Home from './Home';
+import Home from './home/Home';
 import Header from './Header';
 
 function App(props) {
