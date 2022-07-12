@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './home.css';
 import { FaGamepad, FaBomb } from 'react-icons/fa';
 import { BsStars } from 'react-icons/bs';
+import Button from './common/Button';
 
 function Home() {
     return (
@@ -22,7 +22,7 @@ function Home() {
                 </div>
             </div>
             <div className="option-button-container">
-                <Link className="option-button" to="/game">START GAME</Link>
+                <Button text="Start Game" to="/game"/>
             </div>
         </div>
     )
