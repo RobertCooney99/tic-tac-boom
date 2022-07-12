@@ -1,7 +1,7 @@
 import React from 'react';
 import './home.css';
 import Button from '../common/Button';
-import Description from './Description';
+import Description from './HomeDescription';
 
 function Home() {
     return (
