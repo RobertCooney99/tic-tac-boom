@@ -202,7 +202,7 @@ function Game(props) {
       return;
     }
 
-    const randomNumber = Math.floor(Math.random() * 5);
+    const randomNumber = Math.floor(Math.random() * 4);
     let bomb;
     if (randomNumber === 1) {
       bomb = true;
@@ -214,11 +214,11 @@ function Game(props) {
       setBoard(current);
       setPlayerOneIsNext(!playerOneIsNext);
     } else {
-      const randomNumber = Math.floor(Math.random() * 2);
+      const randomNumber = Math.floor(Math.random() * 4);
       if (randomNumber === 1) {
-        plantSmallBomb(x,y);
-      } else {
         plantBigBomb(x,y);
+      } else {
+        plantSmallBomb(x,y);
       }
     }
   }
