@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Game from './Game';
 import Home from './home/Home';
-import Header from './Header';
+import Header from './common/Header';
 
 function App(props) {
   return (

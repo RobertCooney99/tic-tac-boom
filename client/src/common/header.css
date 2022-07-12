@@ -10,4 +10,5 @@ header {
     font-size: 35px;
     font-weight: 800;
     flex-shrink: 1;
+    text-decoration: none;
 }
