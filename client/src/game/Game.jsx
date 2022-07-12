@@ -4,6 +4,7 @@ import Board from './Board';
 import Player from './Player';
 import { Link } from 'react-router-dom';
 import { MdHome, MdReplay, MdShare } from 'react-icons/md';
+import './game.css';
 
 function calculateWinner(squares) {
   if (squares[0][0] && squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2]) {

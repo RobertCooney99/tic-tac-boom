@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
-import Game from './Game';
+import Game from './game/Game';
 import Home from './home/Home';
 import Header from './common/Header';
+import './app.css';
 
 function App(props) {
   return (
