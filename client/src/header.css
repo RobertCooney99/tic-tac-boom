@@ -9,4 +9,5 @@ header {
     color: #fff;
     font-size: 35px;
     font-weight: 800;
+    flex-shrink: 1;
 }

@@ -7,14 +7,20 @@ import Header from './Header';
 
 function App(props) {
   return (
-    <div className="wrapper">
-      <Header/>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/game" element={<Game socket={props.socket}/>}/>
-        </Routes>
-      </BrowserRouter>
+    <div className="page-container">
+      <div className="header-container">
+        <Header/>
+      </div>
+      <div className="body-container">
+        <div className="body-container-content">
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home/>}/>
+              <Route path="/game" element={<Game socket={props.socket}/>}/>
+            </Routes>
+          </BrowserRouter>
+        </div>
+      </div>
     </div>
   );
 }
