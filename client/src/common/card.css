@@ -12,6 +12,8 @@
     margin-left: 15px;
     margin-right: 15px;
     transition: background-color 1s ease;
+    text-decoration: none;
+    color: #222;
 }
 
 .game-description-card:hover {
