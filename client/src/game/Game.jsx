@@ -198,7 +198,7 @@ function Game(props) {
             <MdReplay size={50} color={"#222"} onClick={() => resetGame()} /> 
           </div>
           <div className="game-control">
-            <MdShare size={50} color={"#222"} onClick={() => resetGame()} /> 
+            <MdShare size={50} color={"#222"} onClick={() => {}} /> 
           </div>
           </div>
       </div>
