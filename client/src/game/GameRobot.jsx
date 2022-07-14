@@ -57,28 +57,14 @@ function GameRobot(props) {
 
   const robotMakeMove = () => {
     setTimeout(() => {
-      console.log("ROBOT MAKE MOVE");
       let count = 0;
-      console.log(`PLAYER ONE IS NEXT ${playerOneIsNext}`);
-      console.log(`BOMB IN PROGRESS ${bombInProgress}`);
-      console.log((!playerOneIsNext && !bombInProgress));
       if (!playerOneIsNext && !bombInProgress) {
-        console.log("_____");
-        console.log(`PLAYER ONE IS NEXT ${playerOneIsNext}`);
-        console.log(`BOMB IN PROGRESS ${bombInProgress}`);
-        console.log((!playerOneIsNext && !bombInProgress));
-        console.log("MAKING MOVE");
         let validMove = false;
         do {
           count ++;
           let x = Math.floor(Math.random() * 3);
           let y = Math.floor(Math.random() * 3);
           validMove = handleClick(x,y,true);
-          if (validMove) {
-            console.log("VALID");
-          } else {
-            console.log("INVALID");
-          }
         } while(!validMove && count <= 10);
       }
     }, 500);
