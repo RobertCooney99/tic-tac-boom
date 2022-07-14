@@ -5,7 +5,7 @@ import Player from './Player';
 import { Link } from 'react-router-dom';
 import { MdHome, MdReplay, MdShare } from 'react-icons/md';
 import './game.css';
-import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay } from './helper/gameUtils';
+import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay, checkIfWinningMove } from './helper/gameUtils';
 
 
 function GameRobot(props) {
@@ -49,23 +49,73 @@ function GameRobot(props) {
     setBoard(newSquares);
     setBombInProgress(false);
     if (playerOneIsNext) {
-      robotMakeMove();
+      robotMakeMove("LIL BOMB");
     }
   }
 
-  const robotMakeMove = () => {
-    setTimeout(() => {
-      let count = 0;
-      if (!playerOneIsNext && !bombInProgress) {
-        let validMove = false;
-        do {
-          count ++;
-          let x = Math.floor(Math.random() * 3);
-          let y = Math.floor(Math.random() * 3);
-          validMove = handleClick(x,y,true);
-        } while(!validMove && count <= 10);
+  const clearBoardFromExplosion = () => {
+    const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> null));
+    setBoard(newSquares);
+    setBombInProgress(false);
+    if (playerOneIsNext) {
+      robotMakeMove("AFTER BOMB");
+    }
+}
+
+  const robotMakeMove = (calledBy) => {
+    if (!playerOneIsNext && !bombInProgress) {
+      const winningMoves = [];
+      const gameSavingMoves = [];
+      const setUpWinningMove = [];
+      const blockOpponentSetUp = [];
+      const otherMoves = [];
+
+      for (let x = 0; x <= 2; x++) {
+        for (let y = 0; y <= 2; y++) {
+          console.log(`Checking ${x} ${y}`)
+          if (board[x][y]) {
+            continue;
+          }
+
+          if (checkIfWinningMove(board, x, y, playerTwo.emoji)) {
+            winningMoves.push([x,y]);
+            continue;
+          }
+
+          if (checkIfWinningMove(board, x, y, playerOne.emoji)) {
+            gameSavingMoves.push([x,y]);
+            continue;
+          }
+          otherMoves.push([x,y]);
+        }
       }
-    }, 500);
+
+      console.log(`WINNING MOVES: ${winningMoves}`);
+
+      console.log(`GAME SAVING MOVES: ${gameSavingMoves}`);
+
+      console.log(`OTHER MOVES: ${otherMoves}`);
+
+      setTimeout(() => {
+        if (winningMoves.length > 0) {
+          const randomNumber = Math.floor(Math.random() * winningMoves.length);
+          handleClick(winningMoves[randomNumber][0], winningMoves[randomNumber][1], true);
+          return;
+        }
+
+        if (gameSavingMoves.length > 0) {
+          const randomNumber = Math.floor(Math.random() * gameSavingMoves.length);
+          handleClick(gameSavingMoves[randomNumber][0], gameSavingMoves[randomNumber][1], true);
+          return;
+        }
+
+        if (otherMoves.length > 0) {
+          const randomNumber = Math.floor(Math.random() * otherMoves.length);
+          handleClick(otherMoves[randomNumber][0], otherMoves[randomNumber][1], true);
+          return;
+        }
+      }, 750);
+    }
   }
 
   const placeBombOnBoard = (x,y,bomb) => {
@@ -128,15 +178,6 @@ function GameRobot(props) {
     }
   }
 
-  const clearBoardFromExplosion = () => {
-      const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> null));
-      setBoard(newSquares);
-      setBombInProgress(false);
-      if (playerOneIsNext) {
-        robotMakeMove();
-      }
-  }
-
   const calculateSurroundingCoordinates = (x,y) => {
     let surroundingCoordinates = [];
     for (let i = -1; i <= 1; i++) {
@@ -158,8 +199,12 @@ function GameRobot(props) {
     props.socket.emit('boardClick', {xCoordinate: x, yCoordinate: y});
 
     if (calculateWinner(board) || board[x][y] || bombInProgress || (!playerOneIsNext && !robot)) {
+      console.log(board[x][y]);
+      console.log("REJECTED");
       return false;
     }
+
+    console.log("ACCEPTED");
 
     const randomNumber = Math.floor(Math.random() * 4);
     let bomb;
@@ -186,15 +231,18 @@ function GameRobot(props) {
     return true;
   }
 
-  useEffect((bombInProgress) => {
+  useEffect(() => {
+    console.log("PLAYER CHANGED");
+    console.log(playerOneIsNext);
     if (!playerOneIsNext && !bombInProgress) {
-      robotMakeMove();
+      robotMakeMove("PLAYER CHANGE");
     }
   }, [playerOneIsNext]); 
 
-  useEffect((playerOneIsNext) => {
-    if (!playerOneIsNext && !bombInProgress) {
-      robotMakeMove();
+  useEffect(() => {
+    console.log(`BOMB CHANGED: PLAYER NEXT IS ${playerOneIsNext}`);
+    if (!playerOneIsNext && !bombInProgress && (playerOneIsNext != undefined)) {
+      robotMakeMove("BOMB CHANGE");
     }
   }, [bombInProgress]); 
 
@@ -214,7 +262,7 @@ function GameRobot(props) {
     if (winner) {
       status = `${winner} wins!`;
     } else {
-      status = `Player ${playerOneIsNext ? playerOne.getEmoji() : playerTwo.getEmoji()}'s turn...`;
+      status = `${playerOneIsNext ? "Your" : "Robot's"} turn`;
     }
   }
 
