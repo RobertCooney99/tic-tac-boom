@@ -187,19 +187,13 @@ function GameRobot(props) {
   }
 
   useEffect((bombInProgress) => {
-    console.log("PLAYER CHANGED");
-    console.log(playerOneIsNext);
     if (!playerOneIsNext && !bombInProgress) {
-      console.log("ROBOT MAKE MOVE BEING CALLED");
       robotMakeMove();
     }
   }, [playerOneIsNext]); 
 
   useEffect((playerOneIsNext) => {
-    console.log("BOMB CHANGED");
-    console.log(bombInProgress);
     if (!playerOneIsNext && !bombInProgress) {
-      console.log("ROBOT MAKE MOVE BEING CALLED");
       robotMakeMove();
     }
   }, [bombInProgress]); 
