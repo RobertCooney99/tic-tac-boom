@@ -26,7 +26,6 @@ function GameRobot(props) {
       .then(() => delay(300))
       .then(() => cleanUpBomb(x,y))
       .then(() => console.log("BOMB CLEARED FROM BOARD"));
-      // .then(() => robotMakeMove());
   }
 
   const plantBigBomb = (x,y) => {
@@ -38,7 +37,6 @@ function GameRobot(props) {
       .then(() => spreadBigBombToSurroundingArea([[x,y]], [[x,y]]))
       .then(() => delay(250))
       .then(() => clearBoardFromExplosion());
-      // .then(() => robotMakeMove());
   }
 
   const cleanUpBomb = (x,y) => {
