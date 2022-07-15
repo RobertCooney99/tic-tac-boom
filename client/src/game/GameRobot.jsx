@@ -5,7 +5,7 @@ import Player from './Player';
 import { Link } from 'react-router-dom';
 import { MdHome, MdReplay, MdShare } from 'react-icons/md';
 import './game.css';
-import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay, checkIfWinningMove } from './helper/gameUtils';
+import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay, checkIfWinningMove, calculateSurroundingCoordinates, checkIfSetUpWinningMove } from './helper/gameUtils';
 
 
 function GameRobot(props) {
@@ -86,6 +86,17 @@ function GameRobot(props) {
             gameSavingMoves.push([x,y]);
             continue;
           }
+
+          if (checkIfSetUpWinningMove(board, x, y, playerTwo.emoji)) {
+            setUpWinningMove.push([x,y]);
+            continue;
+          }
+
+          if (checkIfSetUpWinningMove(board, x, y, playerOne.emoji)) {
+            blockOpponentSetUp.push([x,y]);
+            continue;
+          }
+
           otherMoves.push([x,y]);
         }
       }
@@ -93,6 +104,10 @@ function GameRobot(props) {
       console.log(`WINNING MOVES: ${winningMoves}`);
 
       console.log(`GAME SAVING MOVES: ${gameSavingMoves}`);
+
+      console.log(`SET UP WINNING MOVE: ${setUpWinningMove}`);
+
+      console.log(`BLOCK SET UP WINNING MOVE: ${blockOpponentSetUp}`);
 
       console.log(`OTHER MOVES: ${otherMoves}`);
 
@@ -106,6 +121,18 @@ function GameRobot(props) {
         if (gameSavingMoves.length > 0) {
           const randomNumber = Math.floor(Math.random() * gameSavingMoves.length);
           handleClick(gameSavingMoves[randomNumber][0], gameSavingMoves[randomNumber][1], true);
+          return;
+        }
+
+        if (setUpWinningMove.length > 0) {
+          const randomNumber = Math.floor(Math.random() * setUpWinningMove.length);
+          handleClick(setUpWinningMove[randomNumber][0], setUpWinningMove[randomNumber][1], true);
+          return;
+        }
+
+        if (blockOpponentSetUp.length > 0) {
+          const randomNumber = Math.floor(Math.random() * blockOpponentSetUp.length);
+          handleClick(blockOpponentSetUp[randomNumber][0], blockOpponentSetUp[randomNumber][1], true);
           return;
         }
 
@@ -132,7 +159,7 @@ function GameRobot(props) {
   }
 
   const spreadBombToSurroundingArea = (x,y) => {
-    const surroundingCoordinates = calculateSurroundingCoordinates(x,y);
+    const surroundingCoordinates = calculateSurroundingCoordinates(x,y,false);
     const newSquares = board.map((x) => x);
     for (let coordinates of surroundingCoordinates) {
       newSquares[coordinates[0]][coordinates[1]] = '💥';
@@ -148,7 +175,7 @@ function GameRobot(props) {
       let surroundingCoordinates = [];
       let allSurroundingCoordinates = [];
       for (let coordinates of coordinatesToExplode) {
-        surroundingCoordinates.push(calculateSurroundingCoordinates(coordinates[0], coordinates[1]));
+        surroundingCoordinates.push(calculateSurroundingCoordinates(coordinates[0], coordinates[1], false));
       }
       for (let coordinatesArray of surroundingCoordinates) {
         for (let coordinates of coordinatesArray) {
@@ -176,22 +203,6 @@ function GameRobot(props) {
       setBoard(newSquares);
       return Promise.resolve().then(() => delay(250)).then(() => spreadBigBombToSurroundingArea(squaresToExplode, alreadyExplodedSquares));
     }
-  }
-
-  const calculateSurroundingCoordinates = (x,y) => {
-    let surroundingCoordinates = [];
-    for (let i = -1; i <= 1; i++) {
-      for (let j = -1; j <= 1; j++) {
-        let xCoordinate = x + i;
-        let yCoordinate = y + j;
-        if ( xCoordinate < 0 || yCoordinate < 0 || xCoordinate > 2 || yCoordinate > 2 || (x === xCoordinate && y === yCoordinate) || (Math.abs(i) === Math.abs(j))) { 
-          continue;
-        }
-        surroundingCoordinates.push([xCoordinate, yCoordinate]);
-      }
-    }
-
-    return surroundingCoordinates;
   }
 
   const handleClick = (x,y,robot) => {

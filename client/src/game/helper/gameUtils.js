@@ -1,5 +1,3 @@
-import { MdInsertChartOutlined } from "react-icons/md";
-
 export const removeDuplicatesFromArray = (arr) => {
     let deduplicatedArray = [];
     const arrayLength = arr.length;
@@ -83,8 +81,45 @@ export const checkIfWinningMove = (squares, x, y, icon) => {
     }
 }
 
+export const checkIfSetUpWinningMove = (squares, x, y, icon) => {
+    const newSquares = [[null, null, null], [null, null, null], [null, null, null]];
+    for (let i in squares) {
+        for (let j in squares[i]) {
+            newSquares[i][j] = squares[i][j];
+        }
+    }
+    newSquares[x][y] = icon;
+
+    for (let i in newSquares) {
+        for (let j in newSquares) {
+            if (!newSquares[i][j]) {
+                if (checkIfWinningMove(newSquares, i, j, icon)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 export const delay = (duration) => {
     return new Promise((resolve) => {
       setTimeout(() => resolve(), duration);
     });
-  }
+}
+
+export const calculateSurroundingCoordinates = (x, y, includeDiagonal) => {
+    let surroundingCoordinates = [];
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+        let xCoordinate = x + i;
+        let yCoordinate = y + j;
+        if ( xCoordinate < 0 || yCoordinate < 0 || xCoordinate > 2 || yCoordinate > 2 || (x === xCoordinate && y === yCoordinate) || ((Math.abs(i) === Math.abs(j)) && !includeDiagonal)) { 
+          continue;
+        }
+        surroundingCoordinates.push([xCoordinate, yCoordinate]);
+      }
+    }
+
+    return surroundingCoordinates;
+}
