@@ -60,7 +60,7 @@ function GameRobot(props) {
     if (playerOneIsNext) {
       robotMakeMove("AFTER BOMB");
     }
-}
+  }
 
   const robotMakeMove = (calledBy) => {
     if (!playerOneIsNext && !bombInProgress) {
@@ -112,25 +112,25 @@ function GameRobot(props) {
       console.log(`OTHER MOVES: ${otherMoves}`);
 
       setTimeout(() => {
-        if (winningMoves.length > 0) {
+        if (winningMoves.length > 0 && !robotMakesMistake(20)) {
           const randomNumber = Math.floor(Math.random() * winningMoves.length);
           handleClick(winningMoves[randomNumber][0], winningMoves[randomNumber][1], true);
           return;
         }
 
-        if (gameSavingMoves.length > 0) {
+        if (gameSavingMoves.length > 0 && !robotMakesMistake(20)) {
           const randomNumber = Math.floor(Math.random() * gameSavingMoves.length);
           handleClick(gameSavingMoves[randomNumber][0], gameSavingMoves[randomNumber][1], true);
           return;
         }
 
-        if (setUpWinningMove.length > 0) {
+        if (setUpWinningMove.length > 0 && !robotMakesMistake(20)) {
           const randomNumber = Math.floor(Math.random() * setUpWinningMove.length);
           handleClick(setUpWinningMove[randomNumber][0], setUpWinningMove[randomNumber][1], true);
           return;
         }
 
-        if (blockOpponentSetUp.length > 0) {
+        if (blockOpponentSetUp.length > 0 && !robotMakesMistake(20)) {
           const randomNumber = Math.floor(Math.random() * blockOpponentSetUp.length);
           handleClick(blockOpponentSetUp[randomNumber][0], blockOpponentSetUp[randomNumber][1], true);
           return;
@@ -143,6 +143,11 @@ function GameRobot(props) {
         }
       }, 750);
     }
+  }
+
+  const robotMakesMistake = (chance) => {
+    const randomNumber = Math.floor(Math.random() * 100);
+    return (randomNumber < chance);
   }
 
   const placeBombOnBoard = (x,y,bomb) => {
