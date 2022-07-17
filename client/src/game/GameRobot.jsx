@@ -5,7 +5,7 @@ import Player from './Player';
 import { Link } from 'react-router-dom';
 import { MdHome, MdReplay, MdShare } from 'react-icons/md';
 import './game.css';
-import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay } from './helper/gameUtils';
+import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay, checkIfWinningMove, calculateSurroundingCoordinates, checkIfSetUpWinningMove } from './helper/gameUtils';
 
 
 function GameRobot(props) {
@@ -26,7 +26,6 @@ function GameRobot(props) {
       .then(() => delay(300))
       .then(() => cleanUpBomb(x,y))
       .then(() => console.log("BOMB CLEARED FROM BOARD"));
-      // .then(() => robotMakeMove());
   }
 
   const plantBigBomb = (x,y) => {
@@ -38,7 +37,6 @@ function GameRobot(props) {
       .then(() => spreadBigBombToSurroundingArea([[x,y]], [[x,y]]))
       .then(() => delay(250))
       .then(() => clearBoardFromExplosion());
-      // .then(() => robotMakeMove());
   }
 
   const cleanUpBomb = (x,y) => {
@@ -51,23 +49,105 @@ function GameRobot(props) {
     setBoard(newSquares);
     setBombInProgress(false);
     if (playerOneIsNext) {
-      robotMakeMove();
+      robotMakeMove("LIL BOMB");
     }
   }
 
-  const robotMakeMove = () => {
-    setTimeout(() => {
-      let count = 0;
-      if (!playerOneIsNext && !bombInProgress) {
-        let validMove = false;
-        do {
-          count ++;
-          let x = Math.floor(Math.random() * 3);
-          let y = Math.floor(Math.random() * 3);
-          validMove = handleClick(x,y,true);
-        } while(!validMove && count <= 10);
+  const clearBoardFromExplosion = () => {
+    const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> null));
+    setBoard(newSquares);
+    setBombInProgress(false);
+    if (playerOneIsNext) {
+      robotMakeMove("AFTER BOMB");
+    }
+  }
+
+  const robotMakeMove = (calledBy) => {
+    if (!playerOneIsNext && !bombInProgress) {
+      const winningMoves = [];
+      const gameSavingMoves = [];
+      const setUpWinningMove = [];
+      const blockOpponentSetUp = [];
+      const otherMoves = [];
+
+      for (let x = 0; x <= 2; x++) {
+        for (let y = 0; y <= 2; y++) {
+          console.log(`Checking ${x} ${y}`)
+          if (board[x][y]) {
+            continue;
+          }
+
+          if (checkIfWinningMove(board, x, y, playerTwo.emoji)) {
+            winningMoves.push([x,y]);
+            continue;
+          }
+
+          if (checkIfWinningMove(board, x, y, playerOne.emoji)) {
+            gameSavingMoves.push([x,y]);
+            continue;
+          }
+
+          if (checkIfSetUpWinningMove(board, x, y, playerTwo.emoji)) {
+            setUpWinningMove.push([x,y]);
+            continue;
+          }
+
+          if (checkIfSetUpWinningMove(board, x, y, playerOne.emoji)) {
+            blockOpponentSetUp.push([x,y]);
+            continue;
+          }
+
+          otherMoves.push([x,y]);
+        }
       }
-    }, 500);
+
+      console.log(`WINNING MOVES: ${winningMoves}`);
+
+      console.log(`GAME SAVING MOVES: ${gameSavingMoves}`);
+
+      console.log(`SET UP WINNING MOVE: ${setUpWinningMove}`);
+
+      console.log(`BLOCK SET UP WINNING MOVE: ${blockOpponentSetUp}`);
+
+      console.log(`OTHER MOVES: ${otherMoves}`);
+
+      setTimeout(() => {
+        if (winningMoves.length > 0 && !robotMakesMistake(20)) {
+          const randomNumber = Math.floor(Math.random() * winningMoves.length);
+          handleClick(winningMoves[randomNumber][0], winningMoves[randomNumber][1], true);
+          return;
+        }
+
+        if (gameSavingMoves.length > 0 && !robotMakesMistake(20)) {
+          const randomNumber = Math.floor(Math.random() * gameSavingMoves.length);
+          handleClick(gameSavingMoves[randomNumber][0], gameSavingMoves[randomNumber][1], true);
+          return;
+        }
+
+        if (setUpWinningMove.length > 0 && !robotMakesMistake(20)) {
+          const randomNumber = Math.floor(Math.random() * setUpWinningMove.length);
+          handleClick(setUpWinningMove[randomNumber][0], setUpWinningMove[randomNumber][1], true);
+          return;
+        }
+
+        if (blockOpponentSetUp.length > 0 && !robotMakesMistake(20)) {
+          const randomNumber = Math.floor(Math.random() * blockOpponentSetUp.length);
+          handleClick(blockOpponentSetUp[randomNumber][0], blockOpponentSetUp[randomNumber][1], true);
+          return;
+        }
+
+        if (otherMoves.length > 0) {
+          const randomNumber = Math.floor(Math.random() * otherMoves.length);
+          handleClick(otherMoves[randomNumber][0], otherMoves[randomNumber][1], true);
+          return;
+        }
+      }, 750);
+    }
+  }
+
+  const robotMakesMistake = (chance) => {
+    const randomNumber = Math.floor(Math.random() * 100);
+    return (randomNumber < chance);
   }
 
   const placeBombOnBoard = (x,y,bomb) => {
@@ -84,7 +164,7 @@ function GameRobot(props) {
   }
 
   const spreadBombToSurroundingArea = (x,y) => {
-    const surroundingCoordinates = calculateSurroundingCoordinates(x,y);
+    const surroundingCoordinates = calculateSurroundingCoordinates(x,y,false);
     const newSquares = board.map((x) => x);
     for (let coordinates of surroundingCoordinates) {
       newSquares[coordinates[0]][coordinates[1]] = '💥';
@@ -100,7 +180,7 @@ function GameRobot(props) {
       let surroundingCoordinates = [];
       let allSurroundingCoordinates = [];
       for (let coordinates of coordinatesToExplode) {
-        surroundingCoordinates.push(calculateSurroundingCoordinates(coordinates[0], coordinates[1]));
+        surroundingCoordinates.push(calculateSurroundingCoordinates(coordinates[0], coordinates[1], false));
       }
       for (let coordinatesArray of surroundingCoordinates) {
         for (let coordinates of coordinatesArray) {
@@ -130,38 +210,17 @@ function GameRobot(props) {
     }
   }
 
-  const clearBoardFromExplosion = () => {
-      const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> null));
-      setBoard(newSquares);
-      setBombInProgress(false);
-      if (playerOneIsNext) {
-        robotMakeMove();
-      }
-  }
-
-  const calculateSurroundingCoordinates = (x,y) => {
-    let surroundingCoordinates = [];
-    for (let i = -1; i <= 1; i++) {
-      for (let j = -1; j <= 1; j++) {
-        let xCoordinate = x + i;
-        let yCoordinate = y + j;
-        if ( xCoordinate < 0 || yCoordinate < 0 || xCoordinate > 2 || yCoordinate > 2 || (x === xCoordinate && y === yCoordinate) || (Math.abs(i) === Math.abs(j))) { 
-          continue;
-        }
-        surroundingCoordinates.push([xCoordinate, yCoordinate]);
-      }
-    }
-
-    return surroundingCoordinates;
-  }
-
   const handleClick = (x,y,robot) => {
     console.log("Handling click at: " + x + "," + y);
     props.socket.emit('boardClick', {xCoordinate: x, yCoordinate: y});
 
     if (calculateWinner(board) || board[x][y] || bombInProgress || (!playerOneIsNext && !robot)) {
+      console.log(board[x][y]);
+      console.log("REJECTED");
       return false;
     }
+
+    console.log("ACCEPTED");
 
     const randomNumber = Math.floor(Math.random() * 4);
     let bomb;
@@ -188,21 +247,18 @@ function GameRobot(props) {
     return true;
   }
 
-  useEffect((bombInProgress) => {
+  useEffect(() => {
     console.log("PLAYER CHANGED");
     console.log(playerOneIsNext);
     if (!playerOneIsNext && !bombInProgress) {
-      console.log("ROBOT MAKE MOVE BEING CALLED");
-      robotMakeMove();
+      robotMakeMove("PLAYER CHANGE");
     }
   }, [playerOneIsNext]); 
 
-  useEffect((playerOneIsNext) => {
-    console.log("BOMB CHANGED");
-    console.log(bombInProgress);
-    if (!playerOneIsNext && !bombInProgress) {
-      console.log("ROBOT MAKE MOVE BEING CALLED");
-      robotMakeMove();
+  useEffect(() => {
+    console.log(`BOMB CHANGED: PLAYER NEXT IS ${playerOneIsNext}`);
+    if (!playerOneIsNext && !bombInProgress && (playerOneIsNext != undefined)) {
+      robotMakeMove("BOMB CHANGE");
     }
   }, [bombInProgress]); 
 
@@ -222,7 +278,7 @@ function GameRobot(props) {
     if (winner) {
       status = `${winner} wins!`;
     } else {
-      status = `Player ${playerOneIsNext ? playerOne.getEmoji() : playerTwo.getEmoji()}'s turn...`;
+      status = `${playerOneIsNext ? "Your" : "Robot's"} turn`;
     }
   }
 

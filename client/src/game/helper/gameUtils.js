@@ -19,13 +19,14 @@ export const compareArrays = (a, b) => {
     }
     for (let i in a) {
         if (a[i] !== b[i]) {
-        return false;
+            return false;
         }
     }
     return true;
 }
 
 export const calculateWinner = (squares) => {
+    console.log(squares);
     if (squares[0][0] && squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2]) {
         return squares[0][0];
     } else if (squares[2][0] && squares[2][0] === squares[1][1] && squares[2][0] === squares[0][2]) {
@@ -34,9 +35,9 @@ export const calculateWinner = (squares) => {
 
     for (let i = 0; i <= 2; i++) {
         if (squares[i][0] && squares[i][0] === squares[i][1] && squares[i][0] === squares[i][2]) {
-        return squares[i][0];
+            return squares[i][0];
         } else if (squares[0][i] && squares[0][i] === squares[1][i] && squares[0][i] === squares[2][i]) {
-        return squares[0][i];
+            return squares[0][i];
         }
     }
 
@@ -44,9 +45,9 @@ export const calculateWinner = (squares) => {
 
     for (let i = 0; i <= 2; i++) {
         for (let j = 0; j <= 2; j++) {
-        if (squares[i][j]) {
-            count++;
-        }
+            if (squares[i][j]) {
+                count++;
+            }
         }
     }
 
@@ -57,8 +58,68 @@ export const calculateWinner = (squares) => {
     return null;
 }
 
+export const checkIfWinningMove = (squares, x, y, icon) => {
+    const newSquares = [[null, null, null], [null, null, null], [null, null, null]];
+    console.log(`Check if win move ${x} ${y}`);
+    console.log(squares);
+    console.log("_____");
+    for (let i in squares) {
+        for (let j in squares[i]) {
+            console.log(squares[i][j]);
+            newSquares[i][j] = squares[i][j];
+        }
+    }
+
+    newSquares[x][y] = icon;
+
+    if (calculateWinner(newSquares) === icon) {
+        console.log("WINNING MOVE");
+        return true;
+    } else {
+        console.log("NOT A W MOVE");
+        return false;
+    }
+}
+
+export const checkIfSetUpWinningMove = (squares, x, y, icon) => {
+    const newSquares = [[null, null, null], [null, null, null], [null, null, null]];
+    for (let i in squares) {
+        for (let j in squares[i]) {
+            newSquares[i][j] = squares[i][j];
+        }
+    }
+    newSquares[x][y] = icon;
+
+    for (let i in newSquares) {
+        for (let j in newSquares) {
+            if (!newSquares[i][j]) {
+                if (checkIfWinningMove(newSquares, i, j, icon)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 export const delay = (duration) => {
     return new Promise((resolve) => {
       setTimeout(() => resolve(), duration);
     });
-  }
+}
+
+export const calculateSurroundingCoordinates = (x, y, includeDiagonal) => {
+    let surroundingCoordinates = [];
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+        let xCoordinate = x + i;
+        let yCoordinate = y + j;
+        if ( xCoordinate < 0 || yCoordinate < 0 || xCoordinate > 2 || yCoordinate > 2 || (x === xCoordinate && y === yCoordinate) || ((Math.abs(i) === Math.abs(j)) && !includeDiagonal)) { 
+          continue;
+        }
+        surroundingCoordinates.push([xCoordinate, yCoordinate]);
+      }
+    }
+
+    return surroundingCoordinates;
+}
