@@ -79,32 +79,31 @@ function GameRobot(props) {
 
           if (checkIfWinningMove(board, x, y, playerTwo.emoji)) {
             winningMoves.push([x,y]);
-            continue;
           }
 
           if (checkIfWinningMove(board, x, y, playerOne.emoji)) {
             gameSavingMoves.push([x,y]);
-            continue;
           }
 
           const checkIfSetUpWinningMoveResult = checkIfSetUpWinningMove(board, x, y, playerTwo.emoji);
           if (checkIfSetUpWinningMoveResult) {
             setUpWinningMove.push([[x,y], checkIfSetUpWinningMoveResult]);
-            continue;
           }
 
           const checkIfBlockSetUpWinningMoveResult = checkIfSetUpWinningMove(board, x, y, playerOne.emoji);
           if (checkIfBlockSetUpWinningMoveResult) {
             blockOpponentSetUp.push([[x,y], checkIfBlockSetUpWinningMoveResult]);
-            continue;
           }
 
           otherMoves.push([x,y]);
         }
       }
 
+      const setUpAndBlockWinningMove = mergeSetUpArrays(setUpWinningMove, blockOpponentSetUp);
+
       setUpWinningMove.sort(sortArrayBySecondColumnDesc);
       blockOpponentSetUp.sort(sortArrayBySecondColumnDesc);
+      setUpAndBlockWinningMove.sort(sortArrayBySecondColumnDesc);
 
       setTimeout(() => {
         if (winningMoves.length > 0 && !robotMakesMistake(20)) {
@@ -116,6 +115,12 @@ function GameRobot(props) {
         if (gameSavingMoves.length > 0 && !robotMakesMistake(20)) {
           const randomNumber = Math.floor(Math.random() * gameSavingMoves.length);
           handleClick(gameSavingMoves[randomNumber][0], gameSavingMoves[randomNumber][1], true);
+          return;
+        }
+
+        if (setUpAndBlockWinningMove.length > 0 && !robotMakesMistake(20)) {
+          const randomMove = selectRandomWeightedValue(setUpAndBlockWinningMove);
+          handleClick(randomMove[0][0], randomMove[0][1], true);
           return;
         }
 
@@ -138,6 +143,18 @@ function GameRobot(props) {
         }
       }, 750);
     }
+  }
+
+  const mergeSetUpArrays = (a, b) => {
+    let newArray = [];
+    for (let i in a) {
+      for (let j in b) {
+        if ((a[i][0][0] === b[j][0][0]) && (a[i][0][1] === b[j][0][1])) {
+          newArray.push([a[i][0], (a[i][1] + b[j][1])]);
+        }
+      }
+    }
+    return newArray;
   }
 
   const selectRandomWeightedValue = (array, multiplier = 1) => {
