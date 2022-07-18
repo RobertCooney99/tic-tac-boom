@@ -26,7 +26,6 @@ export const compareArrays = (a, b) => {
 }
 
 export const calculateWinner = (squares) => {
-    console.log(squares);
     if (squares[0][0] && squares[0][0] === squares[1][1] && squares[0][0] === squares[2][2]) {
         return squares[0][0];
     } else if (squares[2][0] && squares[2][0] === squares[1][1] && squares[2][0] === squares[0][2]) {
@@ -60,12 +59,8 @@ export const calculateWinner = (squares) => {
 
 export const checkIfWinningMove = (squares, x, y, icon) => {
     const newSquares = [[null, null, null], [null, null, null], [null, null, null]];
-    console.log(`Check if win move ${x} ${y}`);
-    console.log(squares);
-    console.log("_____");
     for (let i in squares) {
         for (let j in squares[i]) {
-            console.log(squares[i][j]);
             newSquares[i][j] = squares[i][j];
         }
     }
@@ -90,16 +85,19 @@ export const checkIfSetUpWinningMove = (squares, x, y, icon) => {
     }
     newSquares[x][y] = icon;
 
+    let numberOfWinningMovesSetUp = 0;
+
     for (let i in newSquares) {
         for (let j in newSquares) {
             if (!newSquares[i][j]) {
                 if (checkIfWinningMove(newSquares, i, j, icon)) {
-                    return true;
+                    numberOfWinningMovesSetUp++;
                 }
             }
         }
     }
-    return false;
+
+    return numberOfWinningMovesSetUp;
 }
 
 export const delay = (duration) => {
