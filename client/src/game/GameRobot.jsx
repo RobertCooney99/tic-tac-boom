@@ -106,31 +106,31 @@ function GameRobot(props) {
       setUpAndBlockWinningMove.sort(sortArrayBySecondColumnDesc);
 
       setTimeout(() => {
-        if (winningMoves.length > 0 && !robotMakesMistake(20)) {
+        if (winningMoves.length > 0 && (!robotMakesMistake(5) || !isMistakePossible(1, gameSavingMoves, setUpAndBlockWinningMove, setUpWinningMove, blockOpponentSetUp, otherMoves))) {
           const randomNumber = Math.floor(Math.random() * winningMoves.length);
           handleClick(winningMoves[randomNumber][0], winningMoves[randomNumber][1], true);
           return;
         }
 
-        if (gameSavingMoves.length > 0 && !robotMakesMistake(20)) {
+        if (gameSavingMoves.length > 0 && (!robotMakesMistake(5) || !isMistakePossible(2, gameSavingMoves, setUpAndBlockWinningMove, setUpWinningMove, blockOpponentSetUp, otherMoves))) {
           const randomNumber = Math.floor(Math.random() * gameSavingMoves.length);
           handleClick(gameSavingMoves[randomNumber][0], gameSavingMoves[randomNumber][1], true);
           return;
         }
 
-        if (setUpAndBlockWinningMove.length > 0 && !robotMakesMistake(20)) {
+        if (setUpAndBlockWinningMove.length > 0 && (!robotMakesMistake(10) || !isMistakePossible(3, gameSavingMoves, setUpAndBlockWinningMove, setUpWinningMove, blockOpponentSetUp, otherMoves))) {
           const randomMove = selectRandomWeightedValue(setUpAndBlockWinningMove);
           handleClick(randomMove[0][0], randomMove[0][1], true);
           return;
         }
 
-        if (setUpWinningMove.length > 0 && !robotMakesMistake(20)) {
+        if (setUpWinningMove.length > 0 && (!robotMakesMistake(15) || !isMistakePossible(4, gameSavingMoves, setUpAndBlockWinningMove, setUpWinningMove, blockOpponentSetUp, otherMoves))) {
           const randomMove = selectRandomWeightedValue(setUpWinningMove);
           handleClick(randomMove[0][0], randomMove[0][1], true);
           return;
         }
 
-        if (blockOpponentSetUp.length > 0 && !robotMakesMistake(20)) {
+        if (blockOpponentSetUp.length > 0 && (!robotMakesMistake(15) || !isMistakePossible(5, gameSavingMoves, setUpAndBlockWinningMove, setUpWinningMove, blockOpponentSetUp, otherMoves))) {
           const randomMove = selectRandomWeightedValue(blockOpponentSetUp);
           handleClick(randomMove[0][0], randomMove[0][1], true);
           return;
@@ -143,6 +143,27 @@ function GameRobot(props) {
         }
       }, 750);
     }
+  }
+
+  const isMistakePossible = (priority, gameSavingMoves, setUpAndBlockWinningMove, setUpWinningMove, blockOpponentSetUp, otherMoves) => {
+    for (let i = priority + 1; i <= 6; i++) {
+      if ((i === 2) && (gameSavingMoves.length > 0)) {
+        return true;
+      }
+      if ((i === 3) && (setUpAndBlockWinningMove.length > 0)) {
+        return true;
+      }
+      if ((i === 4) && (setUpWinningMove.length > 0)) {
+        return true;
+      }
+      if ((i === 5) && (blockOpponentSetUp.length > 0)) {
+        return true;
+      }
+      if ((i === 6) && (otherMoves.length > 0)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   const mergeSetUpArrays = (a, b) => {
@@ -165,7 +186,7 @@ function GameRobot(props) {
       }
     }
     const randomIndex = Math.floor(Math.random() * weightedArray.length);
-    return array[randomIndex];
+    return weightedArray[randomIndex];
   }
 
   const sortArrayBySecondColumnDesc = (a, b) => {
