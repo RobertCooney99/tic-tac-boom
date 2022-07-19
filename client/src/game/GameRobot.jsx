@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Board from './Board';
 import Player from './Player';
 import { Link } from 'react-router-dom';
-import { MdHome, MdReplay, MdShare } from 'react-icons/md';
+import { MdHome, MdReplay, MdOutlineSettings } from 'react-icons/md';
 import './game.css';
 import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay, checkIfWinningMove, calculateSurroundingCoordinates, checkIfSetUpWinningMove } from './helper/gameUtils';
 
@@ -357,7 +357,7 @@ function GameRobot(props) {
             <MdReplay size={50} color={"#222"} onClick={() => resetGame()} /> 
           </div>
           <div className="game-control">
-            <MdShare size={50} color={"#222"} onClick={() => {}} /> 
+            <MdOutlineSettings size={50} color={"#222"} onClick={() => {}} /> 
           </div>
           </div>
       </div>
