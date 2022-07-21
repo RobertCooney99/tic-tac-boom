@@ -1,6 +1,6 @@
-import './card.css';
-import CardIcon from './CardIcon';
-import CardText from './CardText';
+import '../Card/card.css';
+import CardIcon from '../CardIcon';
+import CardText from '../CardText';
 import { Link } from 'react-router-dom';
 
 function CardLink(props) {

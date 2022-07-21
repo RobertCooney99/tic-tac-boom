@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Game from './components/Game/Game';
 import GameRobot from './components/Game/GameRobot';
-import Home from './components/Home/Home';
-import Options from './components/Options/Options';
-import Header from './components/Header/Header';
+import Home from './components/Home';
+import Options from './components/Options';
+import Header from './components/Header';
 import './app.css';
 
 function App(props) {

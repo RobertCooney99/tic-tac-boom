@@ -2,7 +2,7 @@ import { FaGamepad, FaBomb } from 'react-icons/fa';
 import { BsStars } from 'react-icons/bs';
 import { MdPeopleOutline } from 'react-icons/md';
 import { AiOutlineRobot } from 'react-icons/ai';
-import './card.css';
+import '../Card/card.css';
 
 const icons = {
     game: FaGamepad,

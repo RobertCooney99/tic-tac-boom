@@ -1,6 +1,6 @@
 import './card.css';
-import CardIcon from './CardIcon';
-import CardText from './CardText';
+import CardIcon from '../CardIcon';
+import CardText from '../CardText';
 
 function Card(props) {
     return(
