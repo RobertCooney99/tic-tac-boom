@@ -100,11 +100,11 @@ export const checkIfSetUpWinningMove = (squares, x, y, icon) => {
     return numberOfWinningMovesSetUp;
 }
 
-export const delay = (duration) => {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(), duration);
-    });
-}
+// export const delay = (duration) => {
+//     return new Promise((resolve) => {
+//       setTimeout(() => resolve(), duration);
+//     });
+// }
 
 export const calculateSurroundingCoordinates = (x, y, includeDiagonal) => {
     let surroundingCoordinates = [];
