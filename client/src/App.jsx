@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Game from './game/Game';
 import GameRobot from './game/GameRobot';
-import Home from './home/Home';
+import Home from './components/Home/Home';
 import Options from './options/Options';
 import Header from './components/Header/Header';
 import './app.css';
