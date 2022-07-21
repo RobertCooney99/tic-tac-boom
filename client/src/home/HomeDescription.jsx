@@ -1,5 +1,5 @@
 import './description.css';
-import Card from '../common/Card';
+import Card from '../components/Card';
 
 function HomeDescription() {
 

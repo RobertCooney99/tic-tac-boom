@@ -4,7 +4,7 @@ import Game from './game/Game';
 import GameRobot from './game/GameRobot';
 import Home from './home/Home';
 import Options from './options/Options';
-import Header from './common/Header';
+import Header from './components/Header';
 import './app.css';
 
 function App(props) {
