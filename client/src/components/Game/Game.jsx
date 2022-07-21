@@ -5,7 +5,7 @@ import Player from './Player';
 import { Link } from 'react-router-dom';
 import { MdHome, MdReplay, MdShare } from 'react-icons/md';
 import './game.css';
-import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay } from '../utils/helper/gameUtils';
+import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay } from '../../utils/helper/gameUtils';
 
 
 function Game(props) {
