@@ -5,7 +5,7 @@ import Player from './Player';
 import { Link } from 'react-router-dom';
 import { MdHome, MdReplay, MdOutlineSettings } from 'react-icons/md';
 import './game.css';
-import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay, checkIfWinningMove, calculateSurroundingCoordinates, checkIfSetUpWinningMove } from './helper/gameUtils';
+import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay, checkIfWinningMove, calculateSurroundingCoordinates, checkIfSetUpWinningMove } from '../utils/helper/gameUtils';
 
 
 function GameRobot(props) {
