@@ -1,5 +1,5 @@
-import CardLink from '../components/CardLink';
-import Card from '../components/Card';
+import CardLink from '../components/Card/CardLink';
+import Card from '../components/Card/Card';
 import './options.css';
 
 function Options() {
