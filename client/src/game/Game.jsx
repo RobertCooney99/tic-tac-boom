@@ -1,12 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
-import GameBoard from '../GameBoard';
+import Board from '../components/GameBoard/GameBoard';
 import Player from './Player';
 import { Link } from 'react-router-dom';
 import { MdHome, MdReplay, MdShare } from 'react-icons/md';
 import './game.css';
-import { calculateWinner, compareArrays, removeDuplicatesFromArray } from '../../utils/helper/gameUtils';
-import { delay } from '../../utils/delay';
+import { calculateWinner, compareArrays, removeDuplicatesFromArray, delay } from '../utils/helper/gameUtils';
 
 
 function Game(props) {
@@ -189,7 +188,7 @@ function Game(props) {
           <div>{status}</div>
         </div>
         <div className="game-board">
-          <GameBoard squares={board} onClick={(x,y) => handleClick(x,y)} />
+          <Board squares={board} onClick={(x,y) => handleClick(x,y)} />
         </div>
         <div className="game-controls">
           <div className="game-control">

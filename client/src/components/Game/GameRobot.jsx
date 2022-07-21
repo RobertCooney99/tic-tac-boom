@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import Board from './Board';
+import GameBoard from '../GameBoard';
 import Player from './Player';
 import { Link } from 'react-router-dom';
 import { MdHome, MdReplay, MdOutlineSettings } from 'react-icons/md';
@@ -347,7 +347,7 @@ function GameRobot(props) {
           <div>{status}</div>
         </div>
         <div className="game-board">
-          <Board squares={board} onClick={(x,y) => handleClick(x,y,false)} />
+          <GameBoard squares={board} onClick={(x,y) => handleClick(x,y,false)} />
         </div>
         <div className="game-controls">
           <div className="game-control">

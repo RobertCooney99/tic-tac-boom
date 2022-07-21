@@ -1,7 +1,7 @@
 import React from 'react';
-import {Square} from './Square';
+import {Square} from '../Game/Square';
 
-function Board(props) {
+function GameBoard(props) {
   const renderSquare = (x,y) => {
     return (
       <Square
@@ -32,4 +32,4 @@ function Board(props) {
   );
 }
 
-export default Board;
+export default GameBoard;
