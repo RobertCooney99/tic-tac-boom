@@ -1,4 +1,4 @@
-import '../Card/card.css';
+import './cardlink.css';
 import CardIcon from '../CardIcon';
 import CardText from '../CardText';
 import { Link } from 'react-router-dom';
