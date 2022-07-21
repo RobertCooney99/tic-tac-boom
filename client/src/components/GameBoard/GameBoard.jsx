@@ -1,5 +1,5 @@
 import React from 'react';
-import {Square} from '../Game/Square';
+import Square from '../GameSquare';
 
 function GameBoard(props) {
   const renderSquare = (x,y) => {
