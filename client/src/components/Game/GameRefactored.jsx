@@ -5,7 +5,6 @@ import GameStatus from './GameStatus';
 import GameControls from './GameControls';
 import GameControl from './GameControl';
 import Player from './Player';
-import { Link } from 'react-router-dom';
 import './game.css';
 import GameManager from './GameManager';
 
@@ -26,7 +25,6 @@ function GameRefactored(props) {
   const status = game.calcStatus(bombInProgress, board, playerOneIsNext, playerOne, playerTwo);
 
   return (
-    <div className="container">
       <div className="game">
         <GameStatus status={status} />
         <GameBoard squares={board} onClick={(x,y) => handleClick(x,y)} />
@@ -36,7 +34,6 @@ function GameRefactored(props) {
           <GameControl iconType={"share"} onClick={() => {}} /> 
         </GameControls>
       </div>
-    </div>
   );
 }
 
