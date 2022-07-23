@@ -12,21 +12,23 @@ function GameBoard(props) {
   }
 
   return (
-      <div>
-        <div className="board-row">
-          {renderSquare(0,0)}
-          {renderSquare(0,1)}
-          {renderSquare(0,2)}
-        </div>
-        <div className="board-row">
-          {renderSquare(1,0)}
-          {renderSquare(1,1)}
-          {renderSquare(1,2)}
-        </div>
-        <div className="board-row">
-          {renderSquare(2,0)}
-          {renderSquare(2,1)}
-          {renderSquare(2,2)}
+      <div className="game-board">
+        <div>
+          <div className="board-row">
+            {renderSquare(0,0)}
+            {renderSquare(0,1)}
+            {renderSquare(0,2)}
+          </div>
+          <div className="board-row">
+            {renderSquare(1,0)}
+            {renderSquare(1,1)}
+            {renderSquare(1,2)}
+          </div>
+          <div className="board-row">
+            {renderSquare(2,0)}
+            {renderSquare(2,1)}
+            {renderSquare(2,2)}
+          </div>
         </div>
       </div>
   );
