@@ -4,7 +4,6 @@ import GameBoard from '../GameBoard';
 import GameStatus from './GameStatus';
 import GameControls from './GameControls';
 import GameControl from './GameControl';
-import Player from './Player';
 import './game.css';
 import SoloGameManager from './SoloGameManager';
 import Robot from './Robot';
