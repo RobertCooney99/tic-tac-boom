@@ -74,13 +74,13 @@ class SoloGameManager extends GameManager {
 
     plantSmallBomb = (x,y,robotMakeMove) => {
         Promise.resolve()
-          .then(() => this.placeBombOnBoard(x,y,'🧨'))
+          .then(() => this.placeBombOnBoard(x, y, '🧨'))
           .then(() => delay(400))
-          .then(() => this.explodeBomb(x,y))
+          .then(() => this.explodeBomb(x, y))
           .then(() => delay(300))
-          .then(() => this.spreadBombToSurroundingArea(x,y))
+          .then(() => this.spreadBombToSurroundingArea(x, y))
           .then(() => delay(300))
-          .then(() => this.cleanUpBomb(x,y))
+          .then(() => this.cleanUpBomb(x, y))
           .then(() => robotMakeMove());
     }
     
@@ -88,9 +88,9 @@ class SoloGameManager extends GameManager {
         Promise.resolve()
           .then(() => this.placeBombOnBoard(x, y, '💣'))
           .then(() => delay(500))
-          .then(() => this.explodeBomb(x,y))
+          .then(() => this.explodeBomb(x, y))
           .then(() => delay(250))
-          .then(() => this.spreadBigBombToSurroundingArea([[x,y]], [[x,y]]))
+          .then(() => this.spreadBigBombToSurroundingArea([[x, y]], [[x, y]]))
           .then(() => delay(250))
           .then(() => this.clearBoardFromExplosion())
           .then(() => robotMakeMove());
