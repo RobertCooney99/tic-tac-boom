@@ -12,7 +12,7 @@ import Robot from './Robot';
 let robot = new Robot();
 let game = new SoloGameManager(robot);
 
-function RobotRefactored(props) {
+function SoloGame(props) {
   const playerOne = new Player('❌');
   const playerTwo = new Player('⭕️');
 
@@ -63,4 +63,4 @@ function RobotRefactored(props) {
   );
 }
 
-export default RobotRefactored;
+export default SoloGame;

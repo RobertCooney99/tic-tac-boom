@@ -10,7 +10,7 @@ import GameManager from './GameManager';
 
 let game = new GameManager();
 
-function GameRefactored(props) {
+function LocalGame(props) {
   const playerOne = new Player('❌');
   const playerTwo = new Player('⭕️');
 
@@ -37,4 +37,4 @@ function GameRefactored(props) {
   );
 }
 
-export default GameRefactored;
+export default LocalGame;
