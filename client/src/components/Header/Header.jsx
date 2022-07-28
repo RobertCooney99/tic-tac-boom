@@ -2,7 +2,7 @@ import './header.css';
 
 function Header() {
     return(
-        <header>TIC TAC BOOM</header>
+        <header className="header-container">TIC TAC BOOM</header>
     )
 }
 
