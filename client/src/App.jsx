@@ -6,6 +6,7 @@ import Options from './components/Options';
 import Header from './components/Header';
 import './app.css';
 import GameRefactored from './components/Game/GameRefactored';
+import RobotRefactored from './components/Game/RobotRefactored';
 
 function App(props) {
   return (
@@ -20,7 +21,7 @@ function App(props) {
               <Route path="/" element={<Home/>}/>
               <Route path="/options" element={<Options/>}/>
               <Route path="/game" element={<GameRefactored socket={props.socket}/>}/>
-              <Route path="/solo" element={<GameRobot socket={props.socket}/>}/>
+              <Route path="/solo" element={<RobotRefactored socket={props.socket}/>}/>
             </Routes>
           </BrowserRouter>
         </div>

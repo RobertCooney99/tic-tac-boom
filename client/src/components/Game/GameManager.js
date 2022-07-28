@@ -19,7 +19,11 @@ class GameManager {
             if (winner) {
                 status = `${winner} wins!`;
             } else {
-                status = `Player ${playerOneIsNext ? playerOne.getEmoji() : playerTwo.getEmoji()}'s turn...`;
+                if (robot) {
+                    status = `${playerOneIsNext ? "Your" : "Robot's"} turn`;
+                } else {
+                    status = `Player ${playerOneIsNext ? playerOne.getEmoji() : playerTwo.getEmoji()}'s turn...`;
+                }
             }
         }
         return status;
