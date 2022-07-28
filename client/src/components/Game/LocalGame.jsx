@@ -11,7 +11,7 @@ let game = new GameManager();
 
 function LocalGame(props) {
   const [board, setBoard] = useState([[null, null, null], [null, null, null], [null, null, null]]);
-  const [status, setStatus] = useState("TIC TAC BOOM");
+  const [status, setStatus] = useState();
 
   useEffect(() => {
     game.setMethods(setBoard, setStatus);
