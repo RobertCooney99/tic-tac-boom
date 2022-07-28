@@ -1,7 +1,7 @@
 import { checkIfWinningMove, checkIfSetUpWinningMove } from '../../utils/helper/gameUtils';
 
 class Robot {
-    calculateMove = (board,bombInProgress,playerOneIsNext,playerOne,playerTwo,setBoard,setPlayerOneIsNext,setBombInProgress) => {
+    calculateMove = (board, bombInProgress, playerOneIsNext, playerOne, playerTwo) => {
         if (!playerOneIsNext && !bombInProgress) {
             const winningMoves = [];
             const gameSavingMoves = [];

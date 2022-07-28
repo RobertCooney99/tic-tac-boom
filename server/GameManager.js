@@ -1,4 +1,19 @@
+class Player {
+    constructor(emoji) {
+        this.emoji = emoji;
+    }
+
+    getEmoji() {
+        return this.emoji;
+    }
+}
+
 class GameManager {
+    constructor() {
+        const playerOne = new Player('❌');
+        const playerTwo = new Player('⭕️');
+    }
+
     resetGame = (bombInProgress, setBoard, setPlayerOneIsNext, setBombInProgress) => {
         if (!bombInProgress) {
             setBoard([[null, null, null], [null, null, null], [null, null, null]]);
@@ -7,7 +22,7 @@ class GameManager {
         }
     };
 
-    calcStatus = (bombInProgress, board, playerOneIsNext, playerOne, playerTwo) => {
+    calcStatus = (bombInProgress, board, playerOneIsNext) => {
         let status;
         if (bombInProgress) {
             status = 'BOOM!';
@@ -22,7 +37,7 @@ class GameManager {
         return status;
     };
 
-    handleClick = (x,y,board,bombInProgress,playerOneIsNext,playerOne,playerTwo,setBoard,setPlayerOneIsNext,setBombInProgress) => {
+    handleClick = (x,y,board,bombInProgress,playerOneIsNext,setBoard,setPlayerOneIsNext,setBombInProgress) => {
         console.log("Handling click at: " + x + "," + y);
     
         if (calculateWinner(board) || board[x][y] || bombInProgress) {
@@ -37,7 +52,7 @@ class GameManager {
     
         if (!bomb) {
             const current = board.map((x) => x);
-            current[x][y] = playerOneIsNext ? playerOne.getEmoji() : playerTwo.getEmoji();
+            current[x][y] = playerOneIsNext ? this.playerOne.getEmoji() : this.playerTwo.getEmoji();
             setBoard(current);
             setPlayerOneIsNext(!playerOneIsNext);
         } else {

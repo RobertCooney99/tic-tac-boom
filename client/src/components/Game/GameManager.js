@@ -1,35 +1,57 @@
 import { calculateWinner, calculateSurroundingCoordinates, compareArrays, removeDuplicatesFromArray } from '../../utils/helper/gameUtils';
 import { delay } from '../../utils/delay';
 
+import Player from './Player';
 class GameManager {
-    resetGame = (bombInProgress, setBoard, setPlayerOneIsNext, setBombInProgress) => {
-        if (!bombInProgress) {
-            setBoard([[null, null, null], [null, null, null], [null, null, null]]);
-            setPlayerOneIsNext(true);
-            setBombInProgress(false);
+    constructor() {
+        this.playerOne = new Player('❌');
+        this.playerTwo = new Player('⭕️');
+        this.bombInProgress = false;
+        this.playerOneIsNext = true;
+    }
+
+    setMethods = (board, status) => {
+        this.setBoard = board;
+        this.setStatus = status;
+    }
+
+    initialiseBoard = (board) => {
+        this.board = board;
+    }
+
+    updateBoard = (board) => {
+        this.board = board;
+        this.setBoard(board);
+    }
+
+    resetGame = () => {
+        if (!this.bombInProgress) {
+            this.updateBoard([[null, null, null], [null, null, null], [null, null, null]]);
+            this.playerOneIsNext = true;
+            this.bombInProgress = false;
+            this.calcStatus();
         }
     };
 
-    calcStatus = (bombInProgress, board, playerOneIsNext, playerOne, playerTwo) => {
+    calcStatus = () => {
         let status;
-        if (bombInProgress) {
+        if (this.bombInProgress) {
             status = 'BOOM!';
         } else {
-            const winner = calculateWinner(board);
+            const winner = calculateWinner(this.board);
             if (winner) {
                 status = `${winner} wins!`;
             } else {
-                status = `Player ${playerOneIsNext ? playerOne.getEmoji() : playerTwo.getEmoji()}'s turn...`;
+                status = `Player ${this.playerOneIsNext ? this.playerOne.getEmoji() : this.playerTwo.getEmoji()}'s turn...`;
             }
         }
-        return status;
+        this.setStatus(status);
     };
 
-    handleClick = (x,y,board,bombInProgress,playerOneIsNext,playerOne,playerTwo,setBoard,setPlayerOneIsNext,setBombInProgress) => {
+    handleClick = (x,y) => {
         console.log("Handling click at: " + x + "," + y);
-        // props.socket.emit('boardClick', {xCoordinate: x, yCoordinate: y});
     
-        if (calculateWinner(board) || board[x][y] || bombInProgress) {
+        if (calculateWinner(this.board) || this.board[x][y] || this.bombInProgress) {
             return;
         }
     
@@ -40,67 +62,69 @@ class GameManager {
         }
     
         if (!bomb) {
-            const current = board.map((x) => x);
-            current[x][y] = playerOneIsNext ? playerOne.getEmoji() : playerTwo.getEmoji();
-            setBoard(current);
-            setPlayerOneIsNext(!playerOneIsNext);
+            const current = this.board.map((x) => x);
+            current[x][y] = this.playerOneIsNext ? this.playerOne.getEmoji() : this.playerTwo.getEmoji();
+            this.updateBoard(current);
+            this.playerOneIsNext = !this.playerOneIsNext;
+            this.calcStatus(this.board);
         } else {
+            this.playerOneIsNext = !this.playerOneIsNext;
+            this.bombInProgress = true;
+            this.calcStatus(this.board);
             const randomNumber = Math.floor(Math.random() * 4);
             if (randomNumber === 1) {
-                this.plantBigBomb(x,y,board,setBoard,setPlayerOneIsNext,setBombInProgress,playerOneIsNext);
+                this.plantBigBomb(x,y);
             } else {
-                this.plantSmallBomb(x,y,board,setBoard,setPlayerOneIsNext,setBombInProgress,playerOneIsNext);
+                this.plantSmallBomb(x,y);
             }
         }
     };
 
-    plantSmallBomb = (x,y,board,setBoard,setPlayerOneIsNext,setBombInProgress,playerOneIsNext) => {
+    plantSmallBomb = (x,y) => {
         Promise.resolve()
-          .then(() => this.placeBombOnBoard(x,y,'🧨',board,setBoard,setPlayerOneIsNext,setBombInProgress,playerOneIsNext))
+          .then(() => this.placeBombOnBoard(x,y,'🧨'))
           .then(() => delay(400))
-          .then(() => this.explodeBomb(x,y,board,setBoard))
+          .then(() => this.explodeBomb(x,y))
           .then(() => delay(300))
-          .then(() => this.spreadBombToSurroundingArea(x,y,board,setBoard))
+          .then(() => this.spreadBombToSurroundingArea(x,y))
           .then(() => delay(300))
-          .then(() => this.cleanUpBomb(x,y,board,setBoard,setBombInProgress));
+          .then(() => this.cleanUpBomb(x,y));
     }
     
-    plantBigBomb = (x,y,board,setBoard,setPlayerOneIsNext,setBombInProgress,playerOneIsNext) => {
+    plantBigBomb = (x,y) => {
         Promise.resolve()
-          .then(() => this.placeBombOnBoard(x, y, '💣', board, setBoard, setPlayerOneIsNext, setBombInProgress, playerOneIsNext))
+          .then(() => this.placeBombOnBoard(x, y, '💣'))
           .then(() => delay(500))
-          .then(() => this.explodeBomb(x,y,board,setBoard))
+          .then(() => this.explodeBomb(x,y))
           .then(() => delay(250))
-          .then(() => this.spreadBigBombToSurroundingArea([[x,y]], [[x,y]], board, setBoard, setPlayerOneIsNext, setBombInProgress, playerOneIsNext))
+          .then(() => this.spreadBigBombToSurroundingArea([[x,y]], [[x,y]]))
           .then(() => delay(250))
-          .then(() => this.clearBoardFromExplosion(setBoard, setBombInProgress));
+          .then(() => this.clearBoardFromExplosion());
     }
 
-    placeBombOnBoard = (x,y,bomb,board,setBoard,setPlayerOneIsNext,setBombInProgress,playerOneIsNext) => {
-        const current = board.map((x) => x);
+    placeBombOnBoard = (x,y,bomb) => {
+        const current = this.board.map((x) => x);
         current[x][y] = bomb;
-        setBoard(current);
-        setPlayerOneIsNext(!playerOneIsNext);
-        setBombInProgress(true);
+        this.updateBoard(current);
     }
 
-    explodeBomb = (x,y,board,setBoard) => {
-        let newSquares = board.map((x) => x);
+    explodeBomb = (x,y) => {
+        let newSquares = this.board.map((x) => x);
         newSquares[x][y] = '💥';
-        setBoard(newSquares);
+        this.updateBoard(newSquares);
     }
 
-    spreadBombToSurroundingArea = (x,y,board,setBoard) => {
+    spreadBombToSurroundingArea = (x,y) => {
         const surroundingCoordinates = calculateSurroundingCoordinates(x,y,false);
-        const newSquares = board.map((x) => x);
+        const newSquares = this.board.map((x) => x);
         for (let coordinates of surroundingCoordinates) {
             newSquares[coordinates[0]][coordinates[1]] = '💥';
         }
         console.log(newSquares);
-        setBoard(newSquares);
+        this.updateBoard(newSquares);
     }
     
-    spreadBigBombToSurroundingArea = (coordinatesToExplode, alreadyExplodedSquares, board, setBoard, setPlayerOneIsNext, setBombInProgress, playerOneIsNext) => {
+    spreadBigBombToSurroundingArea = (coordinatesToExplode, alreadyExplodedSquares) => {
         if (alreadyExplodedSquares.length >= 9) {
           return;
         } else {
@@ -127,31 +151,33 @@ class GameManager {
     
             squaresToExplode = removeDuplicatesFromArray(squaresToExplode);
     
-            const newSquares = board.map((x) => x);
+            const newSquares = this.board.map((x) => x);
             for (let coordinates of squaresToExplode) {
                 newSquares[coordinates[0]][coordinates[1]] = '💥';
                 alreadyExplodedSquares.push([coordinates[0],coordinates[1]]);
             }
-            setBoard(newSquares);
-            return Promise.resolve().then(() => delay(250)).then(() => this.spreadBigBombToSurroundingArea(squaresToExplode, alreadyExplodedSquares,board,setBoard,setPlayerOneIsNext,setBombInProgress,playerOneIsNext));
+            this.updateBoard(newSquares);
+            return Promise.resolve().then(() => delay(250)).then(() => this.spreadBigBombToSurroundingArea(squaresToExplode, alreadyExplodedSquares));
         }
     }
     
-    cleanUpBomb = (x,y,board,setBoard,setBombInProgress) => {
+    cleanUpBomb = (x,y) => {
         const surroundingCoordinates = calculateSurroundingCoordinates(x,y,false);
-        let newSquares = board.map((x) => x);
+        let newSquares = this.board.map((x) => x);
         newSquares[x][y] = null;
         for (let coordinates of surroundingCoordinates) {
             newSquares[coordinates[0]][coordinates[1]] = null;
         }
-        setBoard(newSquares);
-        setBombInProgress(false);
+        this.updateBoard(newSquares);
+        this.bombInProgress = false;
+        this.calcStatus(newSquares);
     }
     
-    clearBoardFromExplosion = (setBoard, setBombInProgress) => {
+    clearBoardFromExplosion = () => {
         const newSquares = [...new Array(3)].map(()=> [...new Array(3)].map(()=> null));
-        setBoard(newSquares);
-        setBombInProgress(false);
+        this.updateBoard(newSquares);
+        this.bombInProgress = false;
+        this.calcStatus(newSquares);
     }
 };
 

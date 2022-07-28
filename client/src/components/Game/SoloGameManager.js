@@ -1,5 +1,6 @@
 import GameManager from "./GameManager";
 import { calculateWinner } from '../../utils/helper/gameUtils';
+import { delay } from '../../utils/delay';
 
 class SoloGameManager extends GameManager {
     constructor(robot) {
@@ -8,36 +9,97 @@ class SoloGameManager extends GameManager {
         this.timeouts = [];
     }
 
-    calcStatus = (bombInProgress, board, playerOneIsNext) => {
+    calcStatus = () => {
         let status;
-        if (bombInProgress) {
+        if (this.bombInProgress) {
             status = 'BOOM!';
         } else {
-            const winner = calculateWinner(board);
+            const winner = calculateWinner(this.board);
             if (winner) {
                 status = `${winner} wins!`;
             } else {
-                status = `${playerOneIsNext ? "Your" : "Robot's"} turn`;
+                status = `${this.playerOneIsNext ? "Your" : "Robot's"} turn`;
             }
         }
-        return status;
+        this.setStatus(status);
     };
 
-    resetGame = (bombInProgress, setBoard, setPlayerOneIsNext, setBombInProgress) => {
-        if (!bombInProgress) {
-            setBoard([[null, null, null], [null, null, null], [null, null, null]]);
-            setPlayerOneIsNext(true);
-            setBombInProgress(false);
-        }
-        for (let timeout of this.timeouts) {
-            clearTimeout(timeout);
+    resetGame = () => {
+        if (!this.bombInProgress) {
+            this.updateBoard([[null, null, null], [null, null, null], [null, null, null]]);
+            this.playerOneIsNext = true;
+            this.bombInProgress = false;
+            for (let timeout of this.timeouts) {
+                clearTimeout(timeout);
+            }
+            this.calcStatus();
         }
     }
 
-    robotMakeMove = (board,bombInProgress,playerOneIsNext,playerOne,playerTwo,setBoard,setPlayerOneIsNext,setBombInProgress) => {
-        let {x, y} = this.robot.calculateMove(board,bombInProgress,playerOneIsNext,playerOne,playerTwo,setBoard,setPlayerOneIsNext,setBombInProgress);
+    handleClick = (x,y,robot) => {
+        console.log("Handling click at: " + x + "," + y);
+        if (!this.playerOneIsNext && !robot) {
+            return;
+        }
+    
+        if (calculateWinner(this.board) || this.board[x][y] || this.bombInProgress) {
+            return;
+        }
+    
+        const randomNumber = Math.floor(Math.random() * 4);
+        let bomb;
+        if (randomNumber === 1) {
+            bomb = true;
+        }
+    
+        if (!bomb) {
+            const current = this.board.map((x) => x);
+            current[x][y] = this.playerOneIsNext ? this.playerOne.getEmoji() : this.playerTwo.getEmoji();
+            this.updateBoard(current);
+            this.playerOneIsNext = !this.playerOneIsNext;
+            this.calcStatus(this.board);
+            this.robotMakeMove();
+        } else {
+            this.playerOneIsNext = !this.playerOneIsNext;
+            this.bombInProgress = true;
+            this.calcStatus(this.board);
+            const randomNumber = Math.floor(Math.random() * 4);
+            if (randomNumber === 1) {
+                this.plantBigBomb(x,y,this.robotMakeMove)
+            } else {
+                this.plantSmallBomb(x,y,this.robotMakeMove);
+            }
+        }
+    };
+
+    plantSmallBomb = (x,y,robotMakeMove) => {
+        Promise.resolve()
+          .then(() => this.placeBombOnBoard(x,y,'🧨'))
+          .then(() => delay(400))
+          .then(() => this.explodeBomb(x,y))
+          .then(() => delay(300))
+          .then(() => this.spreadBombToSurroundingArea(x,y))
+          .then(() => delay(300))
+          .then(() => this.cleanUpBomb(x,y))
+          .then(() => robotMakeMove());
+    }
+    
+    plantBigBomb = (x,y,robotMakeMove) => {
+        Promise.resolve()
+          .then(() => this.placeBombOnBoard(x, y, '💣'))
+          .then(() => delay(500))
+          .then(() => this.explodeBomb(x,y))
+          .then(() => delay(250))
+          .then(() => this.spreadBigBombToSurroundingArea([[x,y]], [[x,y]]))
+          .then(() => delay(250))
+          .then(() => this.clearBoardFromExplosion())
+          .then(() => robotMakeMove());
+    }
+
+    robotMakeMove = () => {
+        let robotMove = this.robot.calculateMove(this.board, this.bombInProgress, this.playerOneIsNext, this.playerOne, this.playerTwo);
         this.timeouts.push(setTimeout(() => {
-            this.handleClick(x,y,board,bombInProgress,playerOneIsNext,playerOne,playerTwo,setBoard,setPlayerOneIsNext,setBombInProgress);
+            this.handleClick(robotMove.x, robotMove.y, true);
         }, 750));
     }
 }
