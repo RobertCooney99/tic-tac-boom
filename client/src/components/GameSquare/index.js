@@ -1,3 +1,3 @@
-import Square from "./GameSquare";
+import Square from "./GameSquare.jsx";
 
 export default Square;

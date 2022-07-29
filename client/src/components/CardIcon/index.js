@@ -1,3 +1,3 @@
-import CardIcon from './CardIcon';
+import CardIcon from './CardIcon.jsx';
 
 export default CardIcon;

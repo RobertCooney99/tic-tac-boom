@@ -1,7 +1,7 @@
-import { calculateWinner, calculateSurroundingCoordinates, compareArrays, removeDuplicatesFromArray } from '../../utils/helper/gameUtils';
-import { delay } from '../../utils/delay';
+import { calculateWinner, calculateSurroundingCoordinates, compareArrays, removeDuplicatesFromArray } from '../../utils/helper/gameUtils.js';
+import { delay } from '../../utils/delay.js';
 
-import Player from './Player';
+import Player from './Player.js';
 class GameManager {
     constructor() {
         this.playerOne = new Player('❌');

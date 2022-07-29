@@ -1,3 +1,3 @@
-import CardLink from './CardLink';
+import CardLink from './CardLink.jsx';
 
 export default CardLink;

@@ -1,11 +1,11 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import GameBoard from '../GameBoard';
-import GameStatus from './GameStatus';
-import GameControls from './GameControls';
-import GameControl from './GameControl';
+import GameStatus from './GameStatus.jsx';
+import GameControls from './GameControls.jsx';
+import GameControl from './GameControl.jsx';
 import './game.css';
-import GameManager from './GameManager';
+import GameManager from './GameManager.js';
 
 let game = new GameManager();
 

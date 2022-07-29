@@ -1,6 +1,6 @@
-import GameManager from "./GameManager";
-import { calculateWinner } from '../../utils/helper/gameUtils';
-import { delay } from '../../utils/delay';
+import GameManager from "./GameManager.js";
+import { calculateWinner } from '../../utils/helper/gameUtils.js';
+import { delay } from '../../utils/delay.js';
 
 class SoloGameManager extends GameManager {
     constructor(robot) {

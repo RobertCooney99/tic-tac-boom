@@ -1,18 +1,19 @@
 import React from 'react';
 import Square from '../GameSquare';
 
-function GameBoard(props) {
+function GameBoard({squares, onClick, gameActive}) {
   const renderSquare = (x,y) => {
     return (
       <Square
-        value={props.squares[x][y]}
-        onClick={() => props.onClick(x,y)}
+        value={squares[x][y]}
+        onClick={() => onClick(x,y)}
+        className={`square ${gameActive ? 'active' : 'inactive'}`}
       />
     );
   }
 
   return (
-      <div className="game-board">
+      <div className={`game-board ${gameActive ? '' : 'inactive-game'}`}>
         <div>
           <div className="board-row">
             {renderSquare(0,0)}

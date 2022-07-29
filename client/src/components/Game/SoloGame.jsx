@@ -1,12 +1,12 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import GameBoard from '../GameBoard';
-import GameStatus from './GameStatus';
-import GameControls from './GameControls';
-import GameControl from './GameControl';
+import GameStatus from './GameStatus.jsx';
+import GameControls from './GameControls.jsx';
+import GameControl from './GameControl.jsx';
 import './game.css';
-import SoloGameManager from './SoloGameManager';
-import Robot from './Robot';
+import SoloGameManager from './SoloGameManager.js';
+import Robot from './Robot.js';
 
 let robot = new Robot();
 let game = new SoloGameManager(robot);
