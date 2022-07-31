@@ -20,7 +20,9 @@ function OnlineGame(props) {
     let handleClick;
 
     useEffect(() => {
-        const socket = io.connect("http://localhost:3001");
+        const socket = io.connect("http://localhost:3001", {
+            'reconnection': false
+        });
         setSocket(socket);
 
         socket.emit("join", (id));
@@ -52,10 +54,10 @@ function OnlineGame(props) {
             console.log(gameActive);
         });
 
-        // setInterval(function() {
-        //     // Emit a regular heartbeat to keep the game active
-        //     socket.emit('heartbeat');
-        // }, 2000);
+        socket.on("disconnect", (reason) => {
+            setStatus("Connection error.");
+            setGameActive(false);
+        });
 
         return () => {
             // Disconnect socket on component unmount
@@ -80,7 +82,7 @@ function OnlineGame(props) {
                     <GameStatus status={status} />
                     <GameBoard gameActive={gameActive} squares={board} onClick={(x,y) => handleClick(x,y)} />
                     <GameControls>
-                        <GameControl iconType={"home"} onClick={() => resetGame()} link={true} to={"/"} />
+                        <GameControl iconType={"home"} link={true} to={"/"} />
                         <GameControl iconType={"reset"} onClick={() => resetGame()} />
                         <GameControl iconType={"share"} onClick={() => {}} /> 
                     </GameControls>

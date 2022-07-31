@@ -79,7 +79,7 @@ io.on("connection", (socket) => {
         console.log(socket.id);
         console.log(activePlayers[socket.id]);
         const roomID = activePlayers[socket.id].roomID;
-        socket.to(roomID).emit("status", `Player disconnected...`);
+        socket.to(roomID).emit("status", `Opponent disconnected.`);
         socket.to(roomID).emit("gameActive", false);
         delete activePlayers[socket.id];
     });
@@ -92,6 +92,9 @@ io.on("connection", (socket) => {
         console.log(`Board Click. [Coordinates: ${clickData.xCoordinate},${clickData.yCoordinate}]`);
         console.log(socket.id);
         console.log(activePlayers);
+        if (!activePlayers[socket.id]) {
+            return;
+        }
         const roomID = activePlayers[socket.id].roomID;
         if (lobbies[roomID].gameManager.playerOneIsNext && (lobbies[roomID].playerOne.socket !== socket.id)) {
             return;
@@ -103,6 +106,9 @@ io.on("connection", (socket) => {
 
     socket.on("resetGame", () => {
         console.log(`RESET GAME: ${socket.id}`);
+        if (!activePlayers[socket.id]) {
+            return;
+        }
         const roomID = activePlayers[socket.id].roomID;
         if (lobbies[roomID].playerOne.socket === socket.id) {
             lobbies[roomID].playerOne.reset = true;

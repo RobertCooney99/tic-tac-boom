@@ -1,7 +1,7 @@
 import React from 'react';
 import Square from '../GameSquare';
 
-function GameBoard({squares, onClick, gameActive}) {
+function GameBoard({squares, onClick, gameActive = true}) {
   const renderSquare = (x,y) => {
     return (
       <Square
