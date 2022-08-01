@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "postinstall": "if [ $SERVER_ENV ]; then npm run postinstall-server; else echo no environment detected; fi",
+        "postinstall-server": "cd server && npm install"
+    }
+}
