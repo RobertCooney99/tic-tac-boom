@@ -4,7 +4,9 @@ import http from 'http';
 import {Server} from 'socket.io';
 import cors from 'cors';
 
-import GameManager from '../client/src/components/Game/GameManager.js';
+// import GameManager from '../client/src/components/Game/GameManager.js';
+
+import GameManager from 'shared/GameManager.js';
 
 app.use(cors());
 
