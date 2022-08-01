@@ -12,18 +12,14 @@ app.use(cors());
 
 const server = http.createServer(app);
 
-const io = new Server(server, {
-    cors: {
-        origin: 'http://localhost:3000'
-    }
-})
+const io = new Server(server)
 
 const lobbies = {};
 const activePlayers = {};
 
 const serverPortNumber = 3001;
 
-server.listen(serverPortNumber, () => {
+server.listen(process.env.PORT || serverPortNumber, () => {
     console.log("Server is running on port number: " + serverPortNumber);
 });
 
