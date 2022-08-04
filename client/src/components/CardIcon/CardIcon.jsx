@@ -20,8 +20,10 @@ const Icon = styled.div`
     @media (max-width: 768px) {
         height: 40px;
         width: 40px;
+        margin-bottom: 16px;
     }
     @media (max-width: 320px) {
+        margin-bottom: 10px;
         height: 25px;
         width: 25px;
     }

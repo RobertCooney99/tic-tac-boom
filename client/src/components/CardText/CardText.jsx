@@ -6,7 +6,7 @@ const Text = styled.div`
         font-size: 0.8rem;
     }
     @media (max-width: 320px) {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
     }
 `;
 

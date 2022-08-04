@@ -11,7 +11,8 @@ const CardContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 250px;
+    height: 200px;
+    width: 200px;
     margin-left: 15px;
     margin-right: 15px;
     transition: background-color 1s ease;
@@ -20,6 +21,13 @@ const CardContainer = styled.div`
 
     &:hover {
         background-color: #DDD;
+    }
+
+    @media (max-width: 768px) {
+        width: 150px;
+        height: 100%;
+        margin: 10px 0px;
+        padding: 15px;
     }
 `;
 
