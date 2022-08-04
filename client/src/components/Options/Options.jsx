@@ -1,5 +1,4 @@
 import CardLink from '../CardLink';
-import Card from '../Card';
 import './options.css';
 
 function Options() {
