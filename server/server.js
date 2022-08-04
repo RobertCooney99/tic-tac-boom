@@ -37,8 +37,13 @@ io.on("connection", (socket) => {
                 socket.emit("status", "Room is full.");
             } else {
                 lobbies[roomID].playerCount = lobbies[roomID].playerCount + 1;
-                lobbies[roomID].playerTwo = {};
-                lobbies[roomID].playerTwo.socket = socket.id;
+                if (!lobbies[roomID].playerOne) {
+                    lobbies[roomID].playerOne = {};
+                    lobbies[roomID].playerOne.socket = socket.id;
+                } else {
+                    lobbies[roomID].playerTwo = {};
+                    lobbies[roomID].playerTwo.socket = socket.id;
+                }
                 socket.join(roomID);
                 activePlayers[socket.id] = {};
                 activePlayers[socket.id].roomID = roomID;
@@ -79,9 +84,25 @@ io.on("connection", (socket) => {
         console.log(socket.id);
         console.log(activePlayers[socket.id]);
         const roomID = activePlayers[socket.id].roomID;
+        lobbies[roomID].playerCount = lobbies[roomID].playerCount - 1;
+        if (lobbies[roomID].playerOne.socket) {
+            if (lobbies[roomID].playerOne.socket === socket.id) {
+                delete lobbies[roomID].playerOne;
+            }
+        } else if (lobbies[roomID].playerTwo.socket) {
+            if (lobbies[roomID].playerTwo.socket === socket.id) {
+                delete lobbies[roomID].playerTwo;
+            }
+        }
+        delete activePlayers[socket.id];
+        if (lobbies[roomID].playerCount === 0) {
+            delete lobbies[roomID];
+        } else {
+            lobbies[roomID].gameManager.resetGame();
+        }
+
         socket.to(roomID).emit("status", `Opponent disconnected.`);
         socket.to(roomID).emit("gameActive", false);
-        delete activePlayers[socket.id];
     });
 
     socket.on('heartbeat', () => {
