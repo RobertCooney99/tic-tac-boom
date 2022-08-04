@@ -5,7 +5,6 @@ import styled from "styled-components";
 const CardContainer = styled.div`
     background-color: #EEE;
     border-radius: 8px;
-    font-size: 16px;
     padding: 5px;
     flex: 1 1 0;
     flex-direction: column;
