@@ -4,7 +4,7 @@ import GameBoard from '../GameBoard';
 import GameStatus from './GameStatus.jsx';
 import GameControls from './GameControls.jsx';
 import GameControl from './GameControl.jsx';
-import './game.css';
+import StyledGame from './StyledGame';
 import GameManager from './GameManager.js';
 
 let game = new GameManager();
@@ -20,15 +20,15 @@ function LocalGame(props) {
   }, []);
 
   return (
-      <div className="game">
+      <StyledGame>
         <GameStatus status={status} />
-        <GameBoard squares={board} onClick={(x,y) => game.handleClick(x, y)} />
+        <GameBoard squares={board} onClick={(x,y) => game.handleClick(x, y)} gameActive={true} />
         <GameControls>
           <GameControl iconType={"home"} onClick={() => game.resetGame()} link={true} to={"/"} />
           <GameControl iconType={"reset"} onClick={() => game.resetGame()} />
           <GameControl iconType={"share"} onClick={() => {}} /> 
         </GameControls>
-      </div>
+      </StyledGame>
   );
 }
 

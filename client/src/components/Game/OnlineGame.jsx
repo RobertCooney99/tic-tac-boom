@@ -6,6 +6,7 @@ import GameBoard from '../GameBoard';
 import GameStatus from './GameStatus.jsx';
 import GameControls from './GameControls.jsx';
 import GameControl from './GameControl.jsx';
+import StyledGame from './StyledGame';
 
 function OnlineGame(props) {
     const { id } = useParams();
@@ -78,7 +79,7 @@ function OnlineGame(props) {
     return (
         <div>
             {joinedGame ?
-                <div className="game">
+                <StyledGame>
                     <GameStatus status={status} />
                     <GameBoard gameActive={gameActive} squares={board} onClick={(x,y) => handleClick(x,y)} />
                     <GameControls>
@@ -86,14 +87,14 @@ function OnlineGame(props) {
                         <GameControl iconType={"reset"} onClick={() => resetGame()} />
                         <GameControl iconType={"share"} onClick={() => {}} /> 
                     </GameControls>
-                </div>
+                </StyledGame>
 
                 :
                 
-                <div className="game">
+                <StyledGame>
                     <p>{status}</p>
                     <GameControl iconType={"home"} link={true} to={"/"} />
-                </div>
+                </StyledGame>
             }
         </div>
     );

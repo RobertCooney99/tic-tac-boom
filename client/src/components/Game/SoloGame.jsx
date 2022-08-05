@@ -4,7 +4,7 @@ import GameBoard from '../GameBoard';
 import GameStatus from './GameStatus.jsx';
 import GameControls from './GameControls.jsx';
 import GameControl from './GameControl.jsx';
-import './game.css';
+import StyledGame from './StyledGame';
 import SoloGameManager from './SoloGameManager.js';
 import Robot from './Robot.js';
 
@@ -22,7 +22,7 @@ function SoloGame(props) {
   }, []);
 
   return (
-      <div className="game">
+      <StyledGame>
         <GameStatus status={status} />
         <GameBoard squares={board} onClick={(x,y) => game.handleClick(x,y,false)} />
         <GameControls>
@@ -30,7 +30,7 @@ function SoloGame(props) {
           <GameControl iconType={"reset"} onClick={() => game.resetGame()} />
           <GameControl iconType={"share"} onClick={() => {}} /> 
         </GameControls>
-      </div>
+      </StyledGame>
   );
 }
 
