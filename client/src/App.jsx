@@ -6,7 +6,14 @@ import Header from './components/Header';
 import LocalGame from './components/Game/LocalGame';
 import SoloGame from './components/Game/SoloGame';
 import OnlineGame from './components/Game/OnlineGame';
-import styled from "styled-components";
+import styled, {createGlobalStyle} from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    font: 14px "Century Gothic", Futura, sans-serif;
+    margin: 0px;
+  }
+`
 
 const Page = styled.div`
   display: flex;
@@ -36,22 +43,25 @@ const BodyContent = styled.div`
 
 function App(props) {
   return (
-    <Page>
-      <Header/>
-      <Body>
-        <BodyContent>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home/>}/>
-              <Route path="/options" element={<Options/>}/>
-              <Route path="/game" element={<LocalGame socket={props.socket}/>}/>
-              <Route path="/solo" element={<SoloGame socket={props.socket}/>}/>
-              <Route path="/online/:id" element={<OnlineGame socket={props.socket}/>}/>
-            </Routes>
-          </BrowserRouter>
-        </BodyContent>
-      </Body>
-    </Page>
+    <React.Fragment>
+      <Page>
+        <Header/>
+        <Body>
+          <BodyContent>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Home/>}/>
+                <Route path="/options" element={<Options/>}/>
+                <Route path="/game" element={<LocalGame socket={props.socket}/>}/>
+                <Route path="/solo" element={<SoloGame socket={props.socket}/>}/>
+                <Route path="/online/:id" element={<OnlineGame socket={props.socket}/>}/>
+              </Routes>
+            </BrowserRouter>
+          </BodyContent>
+        </Body>
+      </Page>
+      <GlobalStyle />
+    </React.Fragment>
   );
 }
 
