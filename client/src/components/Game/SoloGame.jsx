@@ -24,7 +24,7 @@ function SoloGame(props) {
   return (
       <StyledGame>
         <GameStatus status={status} />
-        <GameBoard squares={board} onClick={(x,y) => game.handleClick(x,y,false)} />
+        <GameBoard gameActive={true} squares={board} onClick={(x,y) => game.handleClick(x,y,false)} />
         <GameControls>
           <GameControl iconType={"home"} onClick={() => game.resetGame()} link={true} to={"/"} />
           <GameControl iconType={"reset"} onClick={() => game.resetGame()} />
