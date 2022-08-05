@@ -16,7 +16,7 @@ function GameBoard({squares, onClick, gameActive}) {
       <Square
         value={squares[x][y]}
         onClick={() => onClick(x,y)}
-        active={true}
+        active={gameActive}
       />
     );
   }
