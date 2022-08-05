@@ -1,14 +1,18 @@
 import React from 'react';
-import './home.css';
+import styled from "styled-components";
 import HomeDescription from './HomeDescription';
 import HomeButtons from './HomeButtons';
 
+const Container = styled.div`
+    justify-content: flex-start;
+`;
+
 function Home() {
     return (
-        <div className="container">
+        <Container>
             <HomeDescription />
             <HomeButtons />
-        </div>
+        </Container>
     )
 }
 

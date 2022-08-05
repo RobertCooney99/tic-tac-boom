@@ -1,18 +1,19 @@
 import React from 'react';
 import { useParams } from "react-router-dom";
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import io from "socket.io-client";
 import GameBoard from '../GameBoard';
 import GameStatus from './GameStatus.jsx';
 import GameControls from './GameControls.jsx';
 import GameControl from './GameControl.jsx';
+import StyledGame from './StyledGame';
 
 function OnlineGame(props) {
     const { id } = useParams();
     const [gameActive, setGameActive] = useState(false);
     const [board, setBoard] = useState([[null, null, null], [null, null, null], [null, null, null]]);
     const [status, setStatus] = useState();
-    const [resetCount, setResetCount] = useState("OOOOOO");
+    // const [resetCount, setResetCount] = useState("OOOOOO");
     const [joinedGame, setJoinedGame] = useState(false);
     const [socket, setSocket] = useState();
 
@@ -43,10 +44,10 @@ function OnlineGame(props) {
             setBoard(board);
         });
 
-        socket.on("resetCount", (count) => {
-            // Update reset counter
-            setResetCount(count);
-        });
+        // socket.on("resetCount", (count) => {
+        //     // Update reset counter
+        //     // setResetCount(count);
+        // });
 
         socket.on("gameActive", (gameActive) => {
             // Update game style based on value
@@ -78,7 +79,7 @@ function OnlineGame(props) {
     return (
         <div>
             {joinedGame ?
-                <div className="game">
+                <StyledGame>
                     <GameStatus status={status} />
                     <GameBoard gameActive={gameActive} squares={board} onClick={(x,y) => handleClick(x,y)} />
                     <GameControls>
@@ -86,14 +87,14 @@ function OnlineGame(props) {
                         <GameControl iconType={"reset"} onClick={() => resetGame()} />
                         <GameControl iconType={"share"} onClick={() => {}} /> 
                     </GameControls>
-                </div>
+                </StyledGame>
 
                 :
                 
-                <div className="game">
+                <StyledGame>
                     <p>{status}</p>
                     <GameControl iconType={"home"} link={true} to={"/"} />
-                </div>
+                </StyledGame>
             }
         </div>
     );

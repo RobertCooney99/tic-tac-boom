@@ -1,37 +1,44 @@
 import React from 'react';
+import styled from "styled-components";
 import Square from '../GameSquare';
 
-function GameBoard({squares, onClick, gameActive = true}) {
+const StyledBoard = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledRow = styled.div`
+`;
+
+function GameBoard({squares, onClick, gameActive}) {
   const renderSquare = (x,y) => {
     return (
       <Square
         value={squares[x][y]}
         onClick={() => onClick(x,y)}
-        className={`square ${gameActive ? 'active' : 'inactive'}`}
+        active={true}
       />
     );
   }
 
   return (
-      <div className={`game-board ${gameActive ? '' : 'inactive-game'}`}>
-        <div>
-          <div className="board-row">
+      <StyledBoard>
+          <StyledRow>
             {renderSquare(0,0)}
             {renderSquare(0,1)}
             {renderSquare(0,2)}
-          </div>
-          <div className="board-row">
+          </StyledRow>
+          <StyledRow>
             {renderSquare(1,0)}
             {renderSquare(1,1)}
             {renderSquare(1,2)}
-          </div>
-          <div className="board-row">
+          </StyledRow>
+          <StyledRow>
             {renderSquare(2,0)}
             {renderSquare(2,1)}
             {renderSquare(2,2)}
-          </div>
-        </div>
-      </div>
+          </StyledRow>
+      </StyledBoard>
   );
 }
 
