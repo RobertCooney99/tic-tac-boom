@@ -21,7 +21,7 @@ function OnlineGame(props) {
     let handleClick;
 
     useEffect(() => {
-        const socket = io.connect("http://localhost:3001", {
+        const socket = io.connect("https://tic-tac-boom-server.herokuapp.com/", {
             'reconnection': false
         });
         setSocket(socket);
