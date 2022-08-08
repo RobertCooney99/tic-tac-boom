@@ -2,8 +2,8 @@ import React from 'react';
 import styled from "styled-components";
 
 const StyledSquare = styled.button`
-  background-color: ${active => active ? '#fff' : '#fafafa'};
-  border: ${active => active ? '3px solid #222' : '3px solid #dadada'};
+  background-color: ${props => props.active ? '#fff' : '#fafafa'};
+  border: ${props => props.active ? '3px solid #222' : '3px solid #dadada'};
   float: left;
   font-size: 50px;
   font-weight: bold;
@@ -31,7 +31,7 @@ const StyledSquare = styled.button`
 
 function Square({onClick, value, active}) {
   return (
-    <StyledSquare type="button" onClick={onClick}>
+    <StyledSquare active={active} type="button" onClick={onClick}>
       {value}
     </StyledSquare>
   );
