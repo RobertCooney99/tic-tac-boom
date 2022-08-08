@@ -4,7 +4,7 @@ import GameBoard from '../GameBoard';
 import GameStatus from './GameStatus.jsx';
 import GameControls from './GameControls.jsx';
 import GameControl from './GameControl.jsx';
-import StyledGame from './StyledGame';
+import StyledGame from './StyledGame.jsx';
 import SoloGameManager from './SoloGameManager.js';
 import Robot from './Robot.js';
 
