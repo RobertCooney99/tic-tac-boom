@@ -4,7 +4,7 @@ import http from 'http';
 import {Server} from 'socket.io';
 import cors from 'cors';
 
-import GameManager from 'shared/GameManager.js';
+import OnlineGameManager from './utils/OnlineGameManager.js';
 
 app.use(cors());
 
@@ -49,13 +49,14 @@ io.on("connection", (socket) => {
                 activePlayers[socket.id].roomID = roomID;
                 io.to(roomID).emit("status", `Starting game...`);
                 socket.emit("joined", true);
-                lobbies[roomID].gameManager = new GameManager();
+                lobbies[roomID].gameManager = new OnlineGameManager();
                 let setBoard = (board) => {
                     io.to(roomID).emit("board", board);
                 }
 
-                let setStatus = (status) => {
-                    io.to(roomID).emit("status", status);
+                let setStatus = (playerOneStatus, playerTwoStatus) => {
+                    io.to(lobbies[roomID].playerOne.socket).emit("status", playerOneStatus);
+                    io.to(lobbies[roomID].playerTwo.socket).emit("status", playerTwoStatus);
                 }
                 lobbies[roomID].gameManager.setMethods(setBoard, setStatus);
                 lobbies[roomID].gameManager.initialiseBoard([[null, null, null], [null, null, null], [null, null, null]]);
