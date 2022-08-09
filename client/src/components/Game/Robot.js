@@ -1,4 +1,4 @@
-import { checkIfWinningMove, checkIfSetUpWinningMove } from '../../utils/helper/gameUtils.js';
+import { checkIfWinningMove, checkIfSetUpWinningMove } from 'shared/utils/helper/gameUtils.js';
 
 class Robot {
     calculateMove = (board, bombInProgress, playerOneIsNext, playerOne, playerTwo) => {
