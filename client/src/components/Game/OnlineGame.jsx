@@ -21,7 +21,7 @@ function OnlineGame(props) {
     let handleClick;
 
     useEffect(() => {
-        const socket = io.connect("http://localhost:3001/", {
+        const socket = io.connect(process.env.REACT_APP_SERVER_URL, {
             'reconnection': false
         });
         setSocket(socket);
