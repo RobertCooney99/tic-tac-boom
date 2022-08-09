@@ -106,10 +106,6 @@ io.on("connection", (socket) => {
         socket.to(roomID).emit("gameActive", false);
     });
 
-    socket.on('heartbeat', () => {
-        console.log(`Heartbeat received. socketID: ${socket.id}, time: ${Date.now()}`);
-    });
-
     socket.on('boardClick', (clickData) => {
         console.log(`Board Click. [Coordinates: ${clickData.xCoordinate},${clickData.yCoordinate}]`);
         console.log(socket.id);
