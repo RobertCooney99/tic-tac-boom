@@ -128,18 +128,34 @@ io.on("connection", (socket) => {
 
     socket.on("resetGame", () => {
         console.log(`RESET GAME: ${socket.id}`);
+        let resetCount = 0;
         if (!activePlayers[socket.id]) {
             return;
         }
         const roomID = activePlayers[socket.id].roomID;
         if (lobbies[roomID].playerOne.socket === socket.id) {
-            lobbies[roomID].playerOne.reset = true;
+            if (lobbies[roomID].playerOne.reset == true) {
+                lobbies[roomID].playerOne.reset = false;
+            } else {
+                lobbies[roomID].playerOne.reset = true
+                resetCount += 1;
+            }
         } else if (lobbies[roomID].playerTwo.socket === socket.id) {
-            lobbies[roomID].playerTwo.reset = true;
+            if (lobbies[roomID].playerTwo.reset == true) {
+                lobbies[roomID].playerTwo.reset = false;
+            } else {
+                lobbies[roomID].playerTwo.reset = true
+                resetCount += 1;
+            }
+        }
+
+        if (resetCount === 1 || resetCount === 0) {
+            io.to(roomID).emit("resetCount", resetCount);
         }
 
         if (lobbies[roomID].playerOne.reset && lobbies[roomID].playerTwo.reset) {
             lobbies[roomID].gameManager.resetGame();
+            io.to(roomID).emit("resetCount", 0);
             lobbies[roomID].playerOne.reset = false;
             lobbies[roomID].playerTwo.reset = false;
         }

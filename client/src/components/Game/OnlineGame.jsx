@@ -6,6 +6,7 @@ import GameBoard from '../GameBoard';
 import GameStatus from './GameStatus.jsx';
 import GameControls from './GameControls.jsx';
 import GameControl from './GameControl.jsx';
+import GameControlCounter from './GameControlCounter';
 import StyledGame from './StyledGame.jsx';
 
 function OnlineGame(props) {
@@ -13,7 +14,7 @@ function OnlineGame(props) {
     const [gameActive, setGameActive] = useState(false);
     const [board, setBoard] = useState([[null, null, null], [null, null, null], [null, null, null]]);
     const [status, setStatus] = useState();
-    // const [resetCount, setResetCount] = useState("OOOOOO");
+    const [resetCount, setResetCount] = useState(0);
     const [joinedGame, setJoinedGame] = useState(false);
     const [socket, setSocket] = useState();
 
@@ -44,10 +45,10 @@ function OnlineGame(props) {
             setBoard(board);
         });
 
-        // socket.on("resetCount", (count) => {
-        //     // Update reset counter
-        //     // setResetCount(count);
-        // });
+        socket.on("resetCount", (count) => {
+            // Update reset counter
+            setResetCount(count);
+        });
 
         socket.on("gameActive", (gameActive) => {
             // Update game style based on value
@@ -84,7 +85,7 @@ function OnlineGame(props) {
                     <GameBoard gameActive={gameActive} squares={board} onClick={(x,y) => handleClick(x,y)} />
                     <GameControls>
                         <GameControl iconType={"home"} link={true} to={"/"} />
-                        <GameControl iconType={"reset"} onClick={() => resetGame()} />
+                        <GameControlCounter count={resetCount} iconType={"reset"} onClick={() => resetGame()} />
                         <GameControl iconType={"share"} onClick={() => {}} /> 
                     </GameControls>
                 </StyledGame>
