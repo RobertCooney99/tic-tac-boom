@@ -38,7 +38,6 @@ const BodyContent = styled.div`
   align-items: center;
   justify-content: space-around;
   height: 100%;
-  padding-bottom: 50px;
 `;
 
 function App(props) {
