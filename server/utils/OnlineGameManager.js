@@ -17,6 +17,8 @@ class OnlineGameManager extends GameManager {
                     this.setStatus("YOU WIN", "YOU LOSE");
                 } else if (winner === this.playerTwo.getEmoji()) {
                     this.setStatus("YOU LOSE", "YOU WIN");
+                } else if (winner === "No one") {
+                    this.setStatus("IT'S A TIE", "IT'S A TIE");
                 }
             } else {
                 if (this.playerOneIsNext) {
