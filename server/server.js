@@ -3,7 +3,7 @@ import http from 'http';
 import {Server} from 'socket.io';
 import cors from 'cors';
 
-import { lobbyManager } from './utils/LobbyManager.js';
+import { lobbyManager } from './utils/lobbyManager.js';
 
 const app = express();
 

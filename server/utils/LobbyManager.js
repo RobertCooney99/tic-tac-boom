@@ -1,7 +1,7 @@
 import OnlineGameManager from './OnlineGameManager.js';
 
 
-export function lobbyManager(ioServer) {
+export const lobbyManager = (ioServer) => {
     const lobbies = {};
     const activePlayers = {};
     const io = ioServer;
@@ -106,7 +106,7 @@ export function lobbyManager(ioServer) {
             delete lobbies[roomID];
             console.log(`Deleted room. [roomID: ${roomID}]`);
         } else {
-            lobbies[roomID].gameManager.resetGame();
+            lobbies[roomID]?.gameManager?.resetGame();
             console.log(`Reset game. [roomID: ${roomID}]`);
         }
     
