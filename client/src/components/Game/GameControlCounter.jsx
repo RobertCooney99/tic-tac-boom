@@ -1,5 +1,4 @@
 import React from 'react';
-import { MdHome, MdReplay, MdShare } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import GameControl from './GameControl';
