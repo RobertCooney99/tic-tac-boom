@@ -11,7 +11,6 @@ export const lobbyManager = (ioServer) => {
         console.log(`Attempting to join lobby. {'room': '${roomID}', 'socket': '${socket.id}'}`);
     
         if (roomID in lobbies) {
-            console.log(`${roomID} already exists.`);
             if (lobbies[roomID].playerCount === 2) {
                 console.log(`Connection to lobby failed. {'room': '${roomID}', 'socket': '${socket.id}', 'reason': 'full'}`);
                 socket.emit("status", "Room is full.");

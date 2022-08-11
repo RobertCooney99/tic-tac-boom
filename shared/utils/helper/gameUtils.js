@@ -68,10 +68,8 @@ export const checkIfWinningMove = (squares, x, y, icon) => {
     newSquares[x][y] = icon;
 
     if (calculateWinner(newSquares) === icon) {
-        console.log("WINNING MOVE");
         return true;
     } else {
-        console.log("NOT A W MOVE");
         return false;
     }
 }
