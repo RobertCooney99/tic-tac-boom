@@ -37,7 +37,6 @@ class SoloGameManager extends GameManager {
     }
 
     handleClick = (x,y,robot) => {
-        console.log("Handling click at: " + x + "," + y);
         if (!this.playerOneIsNext && !robot) {
             return;
         }

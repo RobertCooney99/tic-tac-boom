@@ -53,7 +53,6 @@ function OnlineGame(props) {
         socket.on("gameActive", (gameActive) => {
             // Update game style based on value
             setGameActive(gameActive);
-            console.log(gameActive);
         });
 
         socket.on("disconnect", (reason) => {

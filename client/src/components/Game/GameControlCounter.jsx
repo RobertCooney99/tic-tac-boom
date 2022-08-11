@@ -39,18 +39,14 @@ const icons = {
 
 function GameControlCounter({iconType, onClick, link, to, count}) {
   const Icon = icons[iconType];
-
-  console.log(count);
   
   const control =
-<>
-  <div>
-    <StyledIcon as={Icon} color={"#222"} onClick={onClick}/>
-    {count !== 0 && <StyledCounter>{count}</StyledCounter>}
-  </div>
-</>
-
-  console.log(control);
+    <>
+      <div>
+        <StyledIcon as={Icon} color={"#222"} onClick={onClick}/>
+        {count !== 0 && <StyledCounter>{count}</StyledCounter>}
+      </div>
+    </>
 
   return(
     <>

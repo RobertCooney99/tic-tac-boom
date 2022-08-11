@@ -49,8 +49,6 @@ class GameManager {
     };
 
     handleClick = (x,y) => {
-        console.log("Handling click at: " + x + "," + y);
-    
         if (calculateWinner(this.board) || this.board[x][y] || this.bombInProgress) {
             return;
         }
@@ -120,7 +118,6 @@ class GameManager {
         for (let coordinates of surroundingCoordinates) {
             newSquares[coordinates[0]][coordinates[1]] = '💥';
         }
-        console.log(newSquares);
         this.updateBoard(newSquares);
     }
     
