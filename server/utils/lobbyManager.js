@@ -111,6 +111,10 @@ export const lobbyManager = (ioServer) => {
             console.log(`Deleted room. {'room': '${roomID}'}`);
         } else {
             lobbies[roomID]?.gameManager?.resetGame();
+            if (lobbies[roomID]?.playerOne?.reset) lobbies[roomID].playerOne.reset = false;
+            if (lobbies[roomID]?.playerTwo?.reset) lobbies[roomID].playerTwo.reset = false;
+            const resetCount = calcResetCounter(roomID);
+            io.to(roomID).emit("resetCount", resetCount);
             console.log(`Game reset due to disconnected player. {'room': '${roomID}'}`);
         }
     
@@ -137,6 +141,14 @@ export const lobbyManager = (ioServer) => {
     
         lobbies[roomID].gameManager.handleClick(clickData.xCoordinate, clickData.yCoordinate);
     }
+
+
+    const calcResetCounter = (roomID) => {
+        let resetCount = 0;
+        if (lobbies[roomID]?.playerOne?.reset) {resetCount += 1};
+        if (lobbies[roomID]?.playerTwo?.reset) {resetCount += 1};
+        return resetCount;
+    }
     
     
     const handleResetGame = (socket) => {
@@ -157,9 +169,7 @@ export const lobbyManager = (ioServer) => {
             lobbies[roomID].playerTwo.reset = !lobbies[roomID].playerTwo.reset;
         }
     
-        let resetCount = 0;
-        if (lobbies[roomID].playerOne.reset) {resetCount += 1};
-        if (lobbies[roomID].playerTwo.reset) {resetCount += 1};
+        let resetCount = calcResetCounter(roomID);
     
         if (resetCount === 1 || resetCount === 0) {
             io.to(roomID).emit("resetCount", resetCount);
