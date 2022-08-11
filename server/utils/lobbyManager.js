@@ -104,6 +104,8 @@ export const lobbyManager = (ioServer) => {
         delete activePlayers[socket.id];
         console.log(`Player removed from active player list. {'socket': '${socket.id}'}`);
     
+        lobbies[roomID].playerCount = lobbies[roomID].playerCount - 1;
+
         if (lobbies[roomID].playerCount === 0) {
             delete lobbies[roomID];
             console.log(`Deleted room. {'room': '${roomID}'}`);
@@ -111,8 +113,6 @@ export const lobbyManager = (ioServer) => {
             lobbies[roomID]?.gameManager?.resetGame();
             console.log(`Game reset due to disconnected player. {'room': '${roomID}'}`);
         }
-    
-        lobbies[roomID].playerCount = lobbies[roomID].playerCount - 1;
     
         socket.to(roomID).emit("status", `Opponent disconnected.`);
         socket.to(roomID).emit("gameActive", false);
