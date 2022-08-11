@@ -14,7 +14,7 @@ const server = http.createServer(app);
 const serverPortNumber = 3001;
 
 server.listen(process.env.PORT || serverPortNumber, () => {
-    console.log("Server is running on port number: " + serverPortNumber);
+    console.log(`Server started. {port: ${serverPortNumber}}`);
 });
 
 const io = new Server(server, {
@@ -26,7 +26,7 @@ const io = new Server(server, {
 const lobby = lobbyManager(io);
 
 io.on("connection", (socket) => {
-    console.log(`User connected. {socket: ${socket.id}}`);
+    console.log(`User connected through sockets. {socket: ${socket.id}}`);
     socket.emit("status", "Joining game...");
 
     socket.on("join", (roomID) => {

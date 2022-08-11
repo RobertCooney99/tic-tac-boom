@@ -8,21 +8,19 @@ export const lobbyManager = (ioServer) => {
 
 
     const handleJoinLobby = (roomID, socket) => {
-        console.log(`Attempting to join lobby. {roomID: ${roomID}, socket: ${socket.id}}`);
+        console.log(`Attempting to join lobby. {'room': '${roomID}', 'socket': '${socket.id}'}`);
     
         if (roomID in lobbies) {
             console.log(`${roomID} already exists.`);
             if (lobbies[roomID].playerCount === 2) {
-                console.log(`${roomID} is full.`);
+                console.log(`Connection to lobby failed. {'room': '${roomID}', 'socket': '${socket.id}', 'reason': 'full'}`);
                 socket.emit("status", "Room is full.");
             } else {
                 if (!lobbies[roomID].playerOne) {
-                    console.log(`Joining as player one.`);
                     lobbies[roomID].playerOne = {
                         "socket": socket.id
                     };
                 } else {
-                    console.log(`Joining as player two.`);
                     lobbies[roomID].playerTwo = {
                         "socket": socket.id
                     };
@@ -31,16 +29,17 @@ export const lobbyManager = (ioServer) => {
                 lobbies[roomID].playerCount = lobbies[roomID].playerCount + 1;
     
                 socket.join(roomID);
+                console.log(`Connection to lobby successful. {'room': '${roomID}', 'socket': '${socket.id}'}`);
     
                 activePlayers[socket.id] = {
                     "roomID": roomID
                 };
     
-                io.to(roomID).emit("status", `Starting game...`);
                 socket.emit("joined", true);
     
                 if (lobbies[roomID]?.playerCount === 2) {
-                    console.log(`Creating new game`);
+                    console.log(`Creating new game. {'room': '${roomID}'}`);
+                    io.to(roomID).emit("status", `Starting game.`);
                     lobbies[roomID].gameManager = new OnlineGameManager();
     
                     let setBoard = (board) => {
@@ -61,10 +60,12 @@ export const lobbyManager = (ioServer) => {
                     lobbies[roomID].gameManager.calcStatus();
     
                     io.to(roomID).emit("gameActive", true);
+                } else if (lobbies[roomID]?.playerCount === 1) {
+                    io.to(roomID).emit("status", `Waiting for opponent.`);
                 }
             }
         } else {
-            console.log(`${roomID} does not exist.`);
+            console.log(`Room does not exist. {'room': '${roomID}'}`);
             lobbies[roomID] = {
                 "playerCount": 1,
                 "playerOne": {
@@ -75,19 +76,21 @@ export const lobbyManager = (ioServer) => {
             activePlayers[socket.id] = {
                 "roomID": roomID
             }
+
             socket.join(roomID);
+            console.log(`Connection to lobby successful. {'room': '${roomID}', 'socket': '${socket.id}'}`);
+
             io.to(roomID).emit("status", `Waiting for opponent.`);
             socket.emit("joined", true);
-            console.log(`Room joined. {roomID: ${roomID}, socket: ${socket.id}}`);
         }
     };
     
     
     const handleUserDisconnected = (socket) => {
-        console.log(`User Disconnected. [socketID: ${socket.id}]`);
+        console.log(`User Disconnected. {'socket': '${socket.id}'}`);
     
         if (!activePlayers[socket.id]) {
-            console.log(`User not an active player. [socketID: ${socket.id}]`);
+            console.log(`Disconnected user not an active player. {'socket': '${socket.id}'}`);
             return;
         }
     
@@ -100,14 +103,14 @@ export const lobbyManager = (ioServer) => {
         }
     
         delete activePlayers[socket.id];
-        console.log(`Player removed from active player list. [socketID: ${socket.id}]`);
+        console.log(`Player removed from active player list. {'socket': '${socket.id}'}`);
     
         if (lobbies[roomID].playerCount === 0) {
             delete lobbies[roomID];
-            console.log(`Deleted room. [roomID: ${roomID}]`);
+            console.log(`Deleted room. {'room': '${roomID}'}`);
         } else {
             lobbies[roomID]?.gameManager?.resetGame();
-            console.log(`Reset game. [roomID: ${roomID}]`);
+            console.log(`Game reset due to disconnected player. {'room': '${roomID}'}`);
         }
     
         lobbies[roomID].playerCount = lobbies[roomID].playerCount - 1;
@@ -118,10 +121,10 @@ export const lobbyManager = (ioServer) => {
     
     
     const handleBoardClick = (socket, clickData) => {
-        console.log(`Board Click. {coordinates: {x: ${clickData.xCoordinate}, y: ${clickData.yCoordinate}}, socketID: ${socket.id}}`);
+        console.log(`Board click. {coordinates: {'x': '${clickData.xCoordinate}', 'y': '${clickData.yCoordinate}'}, 'socket': '${socket.id}'}`);
     
         if (!activePlayers[socket.id]) {
-            console.log(`User not an active player. [socketID: ${socket.id}]`);
+            console.log(`User not an active player - click ignored. {'socket': '${socket.id}'}`);
             return;
         }
     
@@ -141,7 +144,7 @@ export const lobbyManager = (ioServer) => {
         console.log(`Attempting to reset game. {socket: ${socket.id}}`);
     
         if (!activePlayers[socket.id]) {
-            console.log(`User not an active player. [socketID: ${socket.id}]`);
+            console.log(`User not an active player - reset ignored. {'socket': '${socket.id}'}`);
             return;
         }
     
@@ -162,7 +165,7 @@ export const lobbyManager = (ioServer) => {
         if (resetCount === 1 || resetCount === 0) {
             io.to(roomID).emit("resetCount", resetCount);
         } else if (resetCount === 2) {
-            console.log(`Resetting game. {roomID: ${roomID}}`);
+            console.log(`Resetting game. {'room': '${roomID}'}`);
             lobbies[roomID].gameManager.resetGame();
             lobbies[roomID].playerOne.reset = false;
             lobbies[roomID].playerTwo.reset = false;
